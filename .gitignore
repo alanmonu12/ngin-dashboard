@@ -1,0 +1,29 @@
+# ESP-IDF
+03_firmware/**/build/
+03_firmware/**/managed_components/
+03_firmware/**/sdkconfig.old
+03_firmware/**/dependencies.lock.bak
+
+# KiCad
+*-backups/
+*.kicad_prl
+fp-info-cache
+_autosave-*
+*.lck
+
+# Python
+__pycache__/
+.venv/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Videos (pesados, fuera de git)
+06_testing/03_videos/*
+!06_testing/03_videos/.gitkeep
+*.mp4
+*.mov
+*.mkv
+*.avi
