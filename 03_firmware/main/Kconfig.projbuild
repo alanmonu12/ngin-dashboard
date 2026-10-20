@@ -1,0 +1,16 @@
+menu "Dashboard"
+
+    choice APP_DATA_SOURCE
+        prompt "Fuente de datos"
+        default APP_SOURCE_SIMULATOR
+        help
+            De dónde salen RPM, velocidad, MAP y barómetro.
+
+        config APP_SOURCE_SIMULATOR
+            bool "Simulador interno"
+            help
+                Ciclos de arranque a fondo, cambios de 1.ª a 6.ª y frenado,
+                sin CAN ni auto. Sirve para desarrollar la UI y la lógica.
+    endchoice
+
+endmenu

@@ -1,0 +1,28 @@
+# WT32-SC01: ESP32-WROVER-B rev. v1.0, 4 MB de flash, 8 MB de PSRAM
+CONFIG_IDF_TARGET="esp32"
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_FREERTOS_HZ=1000
+# -O2: el render por software de LVGL es cálculo de píxeles y con -Og va mucho más lento
+CONFIG_COMPILER_OPTIMIZATION_PERF=y
+
+# PSRAM para logs e imágenes; el parche de caché de la rev. v1 (SPIRAM_CACHE_WORKAROUND) queda activo por defecto
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_USE_MALLOC=y
+
+# LVGL
+# Heap del sistema en lugar del pool fijo de 64 KB: con el pool, una capa que no cabe deja a LVGL
+# reintentando sin ceder la CPU y salta el watchdog. Lo grande cae en PSRAM (SPIRAM_USE_MALLOC).
+CONFIG_LV_USE_CLIB_MALLOC=y
+# Avisos de LVGL por el monitor serial
+CONFIG_LV_USE_LOG=y
+CONFIG_LV_LOG_LEVEL_WARN=y
+CONFIG_LV_LOG_PRINTF=y
+# LV_ATTRIBUTE_FAST_MEM_USE_IRAM no cabe: el ESP32 tiene 128 KB de IRAM y LVGL se pasa por ~41 KB
+CONFIG_LV_FONT_MONTSERRAT_20=y
+CONFIG_LV_FONT_MONTSERRAT_28=y
+CONFIG_LV_FONT_MONTSERRAT_48=y
+# Contador de FPS y CPU en pantalla durante la puesta en marcha
+CONFIG_LV_USE_SYSMON=y
+CONFIG_LV_USE_PERF_MONITOR=y

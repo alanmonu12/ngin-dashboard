@@ -1,0 +1,7 @@
+# clangd config for ESP-IDF (used by esp-clangd)
+CompilationDatabase: build
+CompileFlags:
+  # GCC-only xtensa flags that clang does not understand
+  Remove: [-f*, -m*]
+Diagnostics:
+  Suppress: [unknown-warning-option]

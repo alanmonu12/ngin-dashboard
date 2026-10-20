@@ -1,6 +1,6 @@
-# ESP32-S3 CAN Dashboard (OBD-II)
+# ESP32 CAN Dashboard (OBD-II)
 
-Prototipo de medidor para auto con módulo ESP32-S3 + LCD táctil y transceptor CAN SN65HVD230 (TWAI interno).
+Prototipo de medidor para auto con módulo WT32-SC01 (ESP32-WROVER-B, LCD táctil 3.5" 320×480) y transceptor CAN SN65HVD230 (TWAI interno).
 Funciones: medidor de boost, tacómetro con marcha y shift light por marcha, cronómetro 0–100 km/h.
 Primer vehículo: Kia Forte GT 2019, 1.6 T-GDI, manual 6 + R.
 
@@ -15,7 +15,7 @@ https://claude.ai/code/artifact/7d05a37c-db8c-4c35-bbf3-e4ddce83907b
 | `01_docs/02_decisions` | Registro de decisiones (una nota por decisión) |
 | `01_docs/03_references` | PIDs OBD-II, ISO 15765-4, notas de Kia, artículos |
 | `01_docs/04_images` | Fotos y capturas para la documentación |
-| `02_hardware/01_datasheets` | ESP32-S3, módulo LCD, SN65HVD230, fuente buck |
+| `02_hardware/01_datasheets` | ESP32-WROVER-B, WT32-SC01, SN65HVD230, fuente buck |
 | `02_hardware/02_kicad` | Proyecto KiCad (esquemático y PCB) |
 | `02_hardware/03_wiring_diagrams` | Diagramas de cableado del prototipo y pinout OBD-II |
 | `02_hardware/04_bom` | Lista de materiales |

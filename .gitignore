@@ -1,6 +1,7 @@
 # ESP-IDF
 03_firmware/**/build/
 03_firmware/**/managed_components/
+03_firmware/**/.cache/
 03_firmware/**/sdkconfig.old
 03_firmware/**/dependencies.lock.bak
 
@@ -27,3 +28,9 @@ __pycache__/
 *.mov
 *.mkv
 *.avi
+
+# Configuración local del instalador de ESP-IDF (EIM)
+eim_config.toml
+
+# Configuración local de Serena (MCP)
+.serena/

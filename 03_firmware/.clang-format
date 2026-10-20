@@ -1,0 +1,40 @@
+# Estilo del firmware: ver CODING_STYLE.md. Base parecida al estilo de los ejemplos de ESP-IDF:
+# 4 espacios, llave de función en su propia línea, llaves de control en la misma línea.
+BasedOnStyle: LLVM
+Language: Cpp
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 110
+
+BreakBeforeBraces: Linux
+IndentCaseLabels: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+InsertBraces: true
+
+PointerAlignment: Right
+SpaceAfterCStyleCast: false
+AlignTrailingComments: true
+AlignConsecutiveMacros: Consecutive
+AlignEscapedNewlines: Left
+AlignAfterOpenBracket: Align
+BinPackArguments: true
+BinPackParameters: true
+Cpp11BracedListStyle: true
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Orden de includes (CODING_STYLE.md §3): header propio, C estándar, ESP-IDF/FreeRTOS/terceros, proyecto.
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<'
+    Priority: 1
+  - Regex: '^"(esp_|freertos/|driver/|hal/|soc/|nvs|lvgl|unity|sdkconfig)'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
