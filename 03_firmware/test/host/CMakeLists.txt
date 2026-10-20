@@ -5,10 +5,15 @@
 cmake_minimum_required(VERSION 3.16)
 project(dashboard_host_tests C)
 
-if(NOT DEFINED ENV{IDF_PATH})
-    message(FATAL_ERROR "IDF_PATH no está definido: activa ESP-IDF (get_idf) antes de configurar")
+# Unity: por defecto la copia de ESP-IDF; en CI se pasa -DUNITY_DIR con un clon de la misma versión.
+set(UNITY_DIR "" CACHE PATH "Raíz de Unity (ThrowTheSwitch/Unity)")
+if(NOT UNITY_DIR)
+    if(NOT DEFINED ENV{IDF_PATH})
+        message(FATAL_ERROR "Sin UNITY_DIR ni IDF_PATH: activa ESP-IDF (get_idf) o pasa -DUNITY_DIR=...")
+    endif()
+    set(UNITY_DIR "$ENV{IDF_PATH}/components/unity/unity")
 endif()
-set(UNITY_DIR "$ENV{IDF_PATH}/components/unity/unity")
+option(COVERAGE "Instrumentar el código de producción con gcov" OFF)
 set(FW_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 set(CMAKE_C_STANDARD 11)
@@ -47,6 +52,13 @@ add_executable(host_tests
     integration/test_sim_vehicle.c
 )
 target_link_libraries(host_tests PRIVATE vehicle_logic sim_model unity)
+
+if(COVERAGE)
+    foreach(lib vehicle_logic sim_model)
+        target_compile_options(${lib} PRIVATE --coverage -O0)
+    endforeach()
+    target_link_options(host_tests PRIVATE --coverage)
+endif()
 
 # Un test de CTest por grupo, para ver de un vistazo cuál falla.
 enable_testing()

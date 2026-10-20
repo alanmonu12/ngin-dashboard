@@ -75,7 +75,15 @@ Sin abreviaturas inventadas: `z2h` y `rpm` están en el glosario del documento v
 - Un grupo de Unity por módulo; nombres de test que describan el comportamiento (`stopping_aborts`).
 - Las pruebas de varios módulos juntos van en `test/host/integration/`.
 
-## 9. Commits — revisión
+## 9. Ramas, commits y PRs — CI y revisión
 
-- Un commit = un cambio con sentido propio; mensaje en español, en imperativo: `Agrega fila de LEDs al shift light`.
-- Antes de commitear: formato, tests de host y build del firmware sin warnings.
+- GitHub Flow: `main` siempre compila y pasa los tests. Está protegida: todo entra por PR con los checks
+  en verde (Formato, Tests en host, Build del firmware), sin push directo.
+- Una rama por cambio, de vida corta (días), con prefijo: `feat/`, `fix/`, `ui/`, `docs/`, `ci/`, `chore/`.
+  Ejemplo: `feat/obd-twai`. Se borra al hacer merge.
+- Merge con squash: un commit por PR en `main`. El título del PR es el mensaje del commit, en español
+  e imperativo: `Agrega fila de LEDs al shift light`.
+- Si el PR toca UI, BSP o CAN, la descripción dice cómo se probó en la tarjeta (hasta que haya HIL).
+- Las versiones son tags `vX.Y.Z` sobre `main`.
+- Antes de abrir el PR: formato, tests de host y build del firmware sin warnings; en cambios grandes,
+  `/code-review` y `/simplify`.
