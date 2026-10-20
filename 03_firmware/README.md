@@ -38,6 +38,12 @@ cmake -S . -B build -G Ninja && cmake --build build && ctest --test-dir build --
 Un test nuevo: archivo en `unit/<componente>/` o `integration/` con `TEST_GROUP`, agregarlo a
 `CMakeLists.txt` (fuente y lista de grupos) y su `RUN_TEST_GROUP` en `main.c`.
 
+## CI
+
+`.github/workflows/pr-checks.yml` corre en cada PR y en cada push a `main`: formato (clang-format), tests de
+host con cobertura, build del firmware con guardas de tamaño (`07_tools/01_scripts/check_size.py`) y
+artefactos (`.bin`, `.elf`, `.map`). Ramas y PRs: `CODING_STYLE.md` §9.
+
 ## Ajustes de la pantalla
 
 Si la imagen sale girada, en espejo o con colores invertidos, se corrige con

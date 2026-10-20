@@ -5,6 +5,7 @@ con otro Python: `pip install -r 07_tools/01_scripts/requirements.txt`.
 
 | Script | Para qué |
 | --- | --- |
+| `check_size.py` | Guardas de tamaño: falla si la IRAM pasa de 85 % o la app de 80 % de su partición (lo usa CI) |
 | `read_log.py` | Log del firmware en vivo o desde archivo: colores por nivel, filtro por tag/nivel, backtraces decodificados, guardado y resumen |
 
 ## read_log.py
@@ -20,3 +21,11 @@ python 07_tools/01_scripts/read_log.py --tag sim --tag app        # solo esos ta
   Si el log trae el `ELF file SHA256` del arranque y no coincide con el ELF local, no decodifica:
   las direcciones de otro build apuntan a funciones equivocadas.
 - No abrir a la vez que `idf.py monitor`: los dos quieren el mismo puerto.
+
+## check_size.py
+
+```bash
+cd 03_firmware && idf.py build && cd ..
+python 07_tools/01_scripts/check_size.py                       # límites por defecto
+python 07_tools/01_scripts/check_size.py --iram-max 90         # otro límite
+```

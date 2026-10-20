@@ -1,0 +1,101 @@
+# Checks de cada PR y de cada push a main (ver "Calidad y CI/CD" en el documento vivo).
+# Los nombres de los jobs son los checks obligatorios de la protección de main: si se cambian,
+# hay que actualizar la protección.
+name: PR checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Mismo commit de Unity que trae ESP-IDF v6.1 (components/unity/unity).
+  UNITY_REF: bf560290f6020737eafaa8b5cbd2177c3956c03f
+  # La 21.1.3 de esp-clang no está en PyPI; la 21.1.8 da el mismo formato (verificado sobre todo el código).
+  CLANG_FORMAT_VERSION: 21.1.8
+
+jobs:
+  format:
+    name: Formato
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "clang-format==${CLANG_FORMAT_VERSION}"
+      - name: clang-format
+        working-directory: 03_firmware
+        run: |
+          find main components bsp test -name '*.[ch]' -not -path '*/build/*' -print0 \
+            | xargs -0 clang-format --style=file --dry-run -Werror
+
+  host-tests:
+    name: Tests en host
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          sudo apt-get update -q && sudo apt-get install -y -q ninja-build
+          pip install gcovr
+      - name: Unity
+        run: |
+          git init -q unity
+          git -C unity fetch -q --depth 1 https://github.com/ThrowTheSwitch/Unity.git "${UNITY_REF}"
+          git -C unity checkout -q FETCH_HEAD
+      - name: Build y tests
+        run: |
+          cmake -S 03_firmware/test/host -B build-host -G Ninja -DUNITY_DIR="$PWD/unity" -DCOVERAGE=ON
+          cmake --build build-host
+          ctest --test-dir build-host --output-on-failure
+      - name: Cobertura
+        if: always()
+        run: |
+          gcovr -r 03_firmware --filter '.*/components/' --object-directory build-host --txt-summary \
+            | tee coverage.txt
+          { echo '### Cobertura de vehicle_logic y del modelo del simulador'; echo '```'; cat coverage.txt; echo '```'; } \
+            >> "$GITHUB_STEP_SUMMARY"
+
+  firmware:
+    name: Build del firmware
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build y guardas de tamaño
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v6.1
+          target: esp32
+          path: 03_firmware
+          # El reporte va a un archivo: GITHUB_STEP_SUMMARY no existe dentro del contenedor.
+          command: >-
+            idf.py build &&
+            python ../07_tools/01_scripts/check_size.py > build/size_report.md;
+            status=$?; cat build/size_report.md; exit $status
+      - name: Resumen de tamaño
+        if: always()
+        run: cat 03_firmware/build/size_report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: Artefactos
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-${{ github.sha }}
+          # El .elf decodifica los backtraces de este build (read_log.py compara su SHA256).
+          path: |
+            03_firmware/build/esp32_dashboard.bin
+            03_firmware/build/esp32_dashboard.elf
+            03_firmware/build/esp32_dashboard.map
+            03_firmware/build/bootloader/bootloader.bin
+            03_firmware/build/partition_table/partition-table.bin
+            03_firmware/build/flasher_args.json
+            03_firmware/build/size_report.md
+          retention-days: ${{ github.ref == 'refs/heads/main' && 90 || 14 }}
