@@ -34,3 +34,6 @@ eim_config.toml
 
 # Configuración local de Serena (MCP)
 .serena/
+
+# Caché de ccache de CI
+.ccache/
