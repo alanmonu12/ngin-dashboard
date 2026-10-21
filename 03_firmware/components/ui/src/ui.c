@@ -12,8 +12,8 @@
 static const char *TAG = "ui";
 
 #define LOCK_TIMEOUT_MS         1000
-#define REFRESH_MS              33  /* ~30 Hz */
-#define BLINK_HALF_MS           83  /* Alarma_Cambio a 6 Hz (4–8 Hz en el glosario) */
+#define REFRESH_MS              20 /* 50 Hz: la espera a la copia más el dibujo cabe en los 50 ms de SW-501 */
+#define BLINK_HALF_MS           83 /* Alarma_Cambio a 6 Hz (4–8 Hz en el glosario) */
 #define BOOST_ARC_STEPS_PER_BAR 100 /* el arco avanza en centésimas de bar */
 #define BOOST_ARC_MAX           150 /* escala de 0 a 1.5 bar */
 #define SCREEN_ANIM_MS          150
@@ -43,7 +43,7 @@ static struct {
     int active;
     lv_obj_t *error_label;
 
-    lv_obj_t *boost_arc, *boost_value, *boost_peak;
+    lv_obj_t *boost_arc, *boost_value, *boost_unit, *boost_peak;
     lv_obj_t *led_row;
     lv_obj_t *leds[LED_COUNT];
     lv_color_t led_on[LED_COUNT], led_off[LED_COUNT];
@@ -120,8 +120,8 @@ static void build_boost(lv_obj_t *scr)
 
     ui.boost_value = make_label(scr, &lv_font_montserrat_48, COLOR_TEXT, "0.00");
     lv_obj_align(ui.boost_value, LV_ALIGN_CENTER, 0, 10);
-    lv_obj_align(make_label(scr, &lv_font_montserrat_20, COLOR_QUIET, vehicle_unit_name(ui.cfg.unit)),
-                 LV_ALIGN_CENTER, 0, 54);
+    ui.boost_unit = make_label(scr, &lv_font_montserrat_20, COLOR_QUIET, vehicle_unit_name(ui.cfg.unit));
+    lv_obj_align(ui.boost_unit, LV_ALIGN_CENTER, 0, 54);
 
     ui.boost_peak = make_label(scr, &lv_font_montserrat_20, COLOR_QUIET, "Pico 0.00");
     lv_obj_align(ui.boost_peak, LV_ALIGN_BOTTOM_MID, 0, -12);
@@ -290,6 +290,9 @@ static void refresh_cb(lv_timer_t *t)
         refresh_z2h(&o);
         break;
     }
+    /* SW-501: dibujar en este mismo ciclo. El temporizador de refresco de LVGL no está sincronizado con este
+     * y, si se le espera, suma hasta un periodo más de latencia (se midió 76 ms en el build de banco). */
+    lv_refr_now(NULL);
 }
 
 static void invalidate_cache(void)
@@ -300,11 +303,9 @@ static void invalidate_cache(void)
     ui.last_z2h_state = (vehicle_z2h_state_t)-1;
 }
 
-/* SYS-19: deslizar cambia de pantalla. */
-static void gesture_cb(lv_event_t *e)
+/* Siguiente pantalla del Ciclo_Pantallas con dir = LV_DIR_LEFT, anterior con LV_DIR_RIGHT. */
+static void show_next_screen(lv_dir_t dir)
 {
-    (void)e;
-    lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
     int next;
     lv_screen_load_anim_t anim;
     if (dir == LV_DIR_LEFT) {
@@ -319,6 +320,13 @@ static void gesture_cb(lv_event_t *e)
     ui.active = next;
     invalidate_cache();
     lv_screen_load_anim(ui.screens[next], anim, SCREEN_ANIM_MS, 0, false);
+}
+
+/* SYS-19: deslizar cambia de pantalla. */
+static void gesture_cb(lv_event_t *e)
+{
+    (void)e;
+    show_next_screen(lv_indev_get_gesture_dir(lv_indev_active()));
 }
 
 void ui_show_splash(void)
@@ -369,3 +377,62 @@ esp_err_t ui_start(const ui_config_t *cfg)
     bsp_display_unlock();
     return ESP_OK;
 }
+
+#if CONFIG_APP_BENCH
+static const char *label_text(const lv_obj_t *label)
+{
+    return label ? lv_label_get_text(label) : "";
+}
+
+/* Una letra por LED_Simulado: G, Y o R según su color encendido; '.' si está apagado. */
+static int led_pattern(char *out)
+{
+    int lit = 0;
+    for (int i = 0; i < LED_COUNT; i++) {
+        lv_color_t c = lv_obj_get_style_bg_color(ui.leds[i], LV_PART_MAIN);
+        if (lv_color_eq(c, ui.led_off[i])) {
+            out[i] = '.';
+            continue;
+        }
+        lit++;
+        out[i] = lv_color_eq(c, COLOR_GREEN) ? 'G' : (lv_color_eq(c, COLOR_YELLOW) ? 'Y' : 'R');
+    }
+    out[LED_COUNT] = '\0';
+    return lit;
+}
+
+static void print_screen(void)
+{
+    switch (ui.active) {
+    case SCREEN_BOOST:
+        printf("pantalla=boost valor=\"%s\" unidad=\"%s\" pico=\"%s\" arco=%d/%d\n",
+               label_text(ui.boost_value), label_text(ui.boost_unit), label_text(ui.boost_peak),
+               (int)lv_arc_get_value(ui.boost_arc), BOOST_ARC_MAX);
+        break;
+    case SCREEN_RPM: {
+        char leds[LED_COUNT + 1];
+        int lit = led_pattern(leds);
+        printf("pantalla=rpm marcha=\"%s\" rpm=\"%s\" velocidad=\"%s\" leds=%s encendidos=%d\n",
+               label_text(ui.rpm_gear), label_text(ui.rpm_value), label_text(ui.rpm_speed), leds, lit);
+        break;
+    }
+    case SCREEN_Z2H:
+        printf("pantalla=0-100 tiempo=\"%s\" estado=\"%s\"\n", label_text(ui.z2h_time),
+               label_text(ui.z2h_state));
+        break;
+    }
+    printf("aviso=\"%s\"\n", label_text(ui.error_label));
+}
+
+esp_err_t ui_bench_screen(int dir)
+{
+    ESP_RETURN_ON_FALSE(bsp_display_lock(LOCK_TIMEOUT_MS), ESP_ERR_TIMEOUT, TAG, "lock");
+    if (dir != 0) {
+        show_next_screen(dir > 0 ? LV_DIR_LEFT : LV_DIR_RIGHT);
+    } else {
+        print_screen();
+    }
+    bsp_display_unlock();
+    return ESP_OK;
+}
+#endif

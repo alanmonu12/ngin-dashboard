@@ -19,6 +19,7 @@
 
 #include "bsp.h"
 #include "settings.h"
+#include "ui.h"
 #include "vehicle_boost.h"
 
 static const char *TAG = "bench";
@@ -281,27 +282,57 @@ static int cmd_corrupt(void)
     return err == ESP_OK ? 0 : 1;
 }
 
-static int cmd_latency(void)
+static int compare_u16(const void *a, const void *b)
 {
-    uint16_t copy[LATENCY_WINDOW];
+    return (int)*(const uint16_t *)a - (int)*(const uint16_t *)b;
+}
+
+static int cmd_latency(int argc, char **argv)
+{
+    if (argc > 2 && strcmp(argv[2], "reset") == 0) {
+        taskENTER_CRITICAL(&bench.lock);
+        bench.latency_count = 0;
+        bench.latency_next = 0;
+        taskEXIT_CRITICAL(&bench.lock);
+        return 0;
+    }
+
+    static uint16_t sorted[LATENCY_WINDOW]; /* fuera del stack de la consola */
     size_t n;
     taskENTER_CRITICAL(&bench.lock);
     n = bench.latency_count;
-    memcpy(copy, bench.latency_ms, sizeof(copy));
+    memcpy(sorted, bench.latency_ms, n * sizeof(sorted[0]));
     taskEXIT_CRITICAL(&bench.lock);
 
     if (n == 0) {
         printf("sin mediciones todavía\n");
         return 1;
     }
-    uint32_t max = 0, sum = 0;
+    uint32_t sum = 0;
     for (size_t i = 0; i < n; i++) {
-        max = copy[i] > max ? copy[i] : max;
-        sum += copy[i];
+        sum += sorted[i];
     }
-    printf("latencia de muestra a cuadro dibujado, últimas %u: máx %lu ms, media %lu ms\n", (unsigned)n,
-           (unsigned long)max, (unsigned long)(sum / n));
+    qsort(sorted, n, sizeof(sorted[0]), compare_u16);
+    printf(
+        "latencia de muestra a cuadro dibujado, últimas %u: máx %u ms, p99 %u ms, p50 %u ms, media %lu ms\n",
+        (unsigned)n, sorted[n - 1], sorted[n * 99 / 100], sorted[n / 2], (unsigned long)(sum / n));
     return 0;
+}
+
+static int cmd_screen(int argc, char **argv)
+{
+    int dir = 0;
+    if (argc > 2) {
+        if (strcmp(argv[2], "next") == 0) {
+            dir = 1;
+        } else if (strcmp(argv[2], "prev") == 0) {
+            dir = -1;
+        } else {
+            printf("uso: bench screen [next|prev]\n");
+            return 1;
+        }
+    }
+    return ui_bench_screen(dir) == ESP_OK ? 0 : 1;
 }
 
 static int bench_cmd(int argc, char **argv)
@@ -327,8 +358,11 @@ static int bench_cmd(int argc, char **argv)
     if (strcmp(sub, "corrupt") == 0) {
         return cmd_corrupt();
     }
+    if (strcmp(sub, "screen") == 0) {
+        return cmd_screen(argc, argv);
+    }
     if (strcmp(sub, "latency") == 0) {
-        return cmd_latency();
+        return cmd_latency(argc, argv);
     }
     if (strcmp(sub, "fail_source") == 0) {
         fail_source_flag = FAIL_SOURCE_MAGIC;
@@ -337,7 +371,7 @@ static int bench_cmd(int argc, char **argv)
     if (strcmp(sub, "panic") == 0) {
         abort(); /* SW-906: el backtrace sale por el puerto serial antes de reiniciar */
     }
-    printf("subcomandos: fix, live, z2h, save, settings, corrupt, latency, fail_source, panic\n");
+    printf("subcomandos: fix, live, z2h, save, settings, corrupt, screen, latency, fail_source, panic\n");
     return 1;
 }
 
@@ -357,7 +391,7 @@ esp_err_t bench_start(void)
         .command = "bench",
         .help = "Pruebas en la tarjeta: fix rpm= kmh= map= baro= | live | z2h <ms>|off | save "
                 "unit|shift|bar_start "
-                "| settings | corrupt | latency | fail_source | panic",
+                "| settings | corrupt | screen [next|prev] | latency [reset] | fail_source | panic",
         .func = bench_cmd,
     };
     ESP_RETURN_ON_ERROR(esp_console_cmd_register(&cmd), TAG, "cmd");

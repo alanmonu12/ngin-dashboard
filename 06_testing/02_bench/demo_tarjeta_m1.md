@@ -93,7 +93,9 @@ idf.py -B build_bench -p /dev/ttyUSB0 flash monitor
 | `bench save bar_start <rpm>` | Guarda la RPM_Inicio_Barra con `settings_save` e imprime `OK` o el error |
 | `bench settings` | Imprime los ajustes en uso |
 | `bench corrupt` | Escribe en NVS los ajustes actuales con una RPM_Cambio de 1.ª de 2900 rpm, sin validarlos |
-| `bench latency` | Latencia máxima y media de muestra a cuadro dibujado en las últimas 1000 actualizaciones |
+| `bench screen` | Imprime lo que muestra la pantalla activa: texto de cada etiqueta, valor del arco y patrón de los LED_Simulado (`G`, `Y`, `R` o `.` apagado) |
+| `bench screen next` · `bench screen prev` | Pasa a la pantalla siguiente o anterior del Ciclo_Pantallas, sin el touch |
+| `bench latency` · `bench latency reset` | Latencia de muestra a cuadro dibujado (máxima, p99, p50 y media) en las últimas 1000 actualizaciones, o vacía la ventana |
 | `bench fail_source` | Reinicia y hace fallar el arranque de la fuente de datos una vez |
 | `bench panic` | Llama a `abort()` |
 
@@ -108,6 +110,9 @@ Con la consola, `read_log.py` no sirve para escribir comandos: usar `idf.py moni
 ## Parte B: build de banco
 
 Valores comunes: barómetro de 78 kPa, Ajustes_Por_Defecto (RPM_Cambio 6000 rpm, RPM_Inicio_Barra 2500 rpm).
+
+Donde el guion pide una foto, `bench screen` sirve como evidencia: imprime el texto y el estado que LVGL manda al
+panel. La foto sigue haciendo falta para lo que solo se ve en el panel (colores, parpadeo, animación).
 
 ### SW-104 Boost_Relativo con la Resolución_Unidad
 
@@ -161,7 +166,8 @@ Con RPM_Inicio_Barra de 2500 y RPM_Cambio de 6000, los LED encendidos son la par
 
 ### SW-501 Valor nuevo dibujado en ≤ 50 ms
 
-1. `bench live`, dejar correr el simulador 2 min en cada pantalla y ejecutar `bench latency` en cada una.
+1. `bench live`. En cada pantalla (`bench screen next` para pasar a la siguiente): `bench latency reset`, esperar
+   40 s y `bench latency`. El reset deja fuera la animación del cambio de pantalla, que redibuja la pantalla entera.
 2. **Pasa si** la latencia máxima de las 1000 actualizaciones es de 50 ms o menos en las 3 pantallas. Si no pasa,
    anotar los valores: 50 ms es provisional y puede enmendarse.
 

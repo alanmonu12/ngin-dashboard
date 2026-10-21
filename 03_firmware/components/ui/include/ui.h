@@ -1,6 +1,7 @@
 #pragma once
 
 #include "esp_err.h"
+#include "sdkconfig.h"
 
 #include "vehicle.h"
 
@@ -21,6 +22,14 @@ typedef struct {
 void ui_show_splash(void);
 void ui_show_error(const char *msg);
 esp_err_t ui_start(const ui_config_t *cfg);
+
+#if CONFIG_APP_BENCH
+/*
+ * Solo en el build de banco; toma el lock de LVGL. dir = 0 imprime por el puerto serial lo que muestra la
+ * pantalla activa; dir > 0 pasa a la siguiente pantalla del Ciclo_Pantallas y dir < 0 a la anterior.
+ */
+esp_err_t ui_bench_screen(int dir);
+#endif
 
 #ifdef __cplusplus
 }
