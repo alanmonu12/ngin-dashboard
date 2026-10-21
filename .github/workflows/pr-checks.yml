@@ -78,7 +78,8 @@ jobs:
           cmake -S 03_firmware/test/host -B build-host -G Ninja -DUNITY_DIR="$PWD/unity" -DCOVERAGE=ON
           cmake --build build-host
           ctest --test-dir build-host --output-on-failure
-      # Matriz SYS → SW → test en el resumen; falla si un test no cita su SW-xx o un SW-xx verificado no tiene test.
+      # Matriz SYS → SW → test y SYS → HW en el resumen; falla si un test no cita su SW-xx o un requisito
+      # verificado no tiene test ni registro en un PR.
       - name: Trazabilidad
         if: always()
         run: |

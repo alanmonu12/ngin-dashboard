@@ -131,5 +131,58 @@ class TraceTest(unittest.TestCase):
         self.assert_one_error(errors, "8 columnas en lugar de 7")
 
 
+GOOD_HW = {
+    "HW-101": "| HW-101 | El hardware debe A. | SYS-10 | fuente | Prueba con fuente. | Propuesto | R. |",
+    "HW-301": "| HW-301 | El hardware debe B. | SYS-01, SYS-02 | can | Inspección. | Implementado | R. |",
+}
+
+
+class TraceHardwareTest(unittest.TestCase):
+    def run_hw(self, rows: dict[str, str]) -> tuple[dict, list[str]]:
+        with tempfile.TemporaryDirectory() as tmp:
+            hardware = Path(tmp) / "hardware.md"
+            # La tabla de rangos no son requisitos: no debe leerse como fila.
+            hardware.write_text("| HW-1xx | Alimentación |\n\n" + HEADER + "\n".join(rows.values()) + "\n")
+            errors: list[str] = []
+            hw = tr.read_requirements(hardware, errors, "HW")
+            tr.check_hardware(hw, errors)
+            return hw, errors
+
+    def test_good_input_has_no_errors(self):
+        hw, errors = self.run_hw(GOOD_HW)
+        self.assertEqual([], errors)
+        self.assertEqual(["HW-101", "HW-301"], sorted(hw))
+        self.assertEqual(["SYS-01", "SYS-02"], hw["HW-301"].trace)
+
+    def test_verified_without_pr_fails(self):
+        _, errors = self.run_hw(dict(GOOD_HW, **{"HW-101": GOOD_HW["HW-101"].replace("Propuesto", "Verificado")}))
+        self.assertEqual(1, len(errors), errors)
+        self.assertIn("HW-101 está Verificado pero no registra la prueba o el análisis (PR #nn)", errors[0])
+
+    def test_verified_with_pr_is_allowed(self):
+        row = GOOD_HW["HW-101"].replace("Prueba con fuente.", "Prueba con fuente (PR #42).")
+        _, errors = self.run_hw(dict(GOOD_HW, **{"HW-101": row.replace("Propuesto", "Verificado")}))
+        self.assertEqual([], errors)
+
+    def test_bad_trace_names_the_file(self):
+        _, errors = self.run_hw(dict(GOOD_HW, **{"HW-101": GOOD_HW["HW-101"].replace("SYS-10", "SW-101")}))
+        self.assertEqual(1, len(errors), errors)
+        self.assertIn("hardware.md:", errors[0])
+        self.assertIn("HW-101 con traza inválida: SW-101", errors[0])
+
+    def test_matrix_lists_hw_and_sys_without_children(self):
+        hw, _ = self.run_hw(GOOD_HW)
+        reqs, _ = TraceTest().run_trace(GOOD_REQS, GOOD_TEST)
+        # SW: SYS-02, 03, 04; HW: SYS-01, 02, 10 → faltan SYS-05 a SYS-09.
+        self.assertEqual([f"SYS-0{n}" for n in range(5, 10)], tr.uncovered_sys(reqs, hw))
+        report = tr.render(reqs, hw, ["boost.a", "boost.b"], [])
+        self.assertIn("| SYS-10 | HW-101 | fuente | Propuesto | — |", report)
+        self.assertIn("**SYS-xx sin SW-xx ni HW-xx**", report)
+
+    def test_deleted_requirement_does_not_cover_its_sys(self):
+        hw, _ = self.run_hw(dict(GOOD_HW, **{"HW-101": GOOD_HW["HW-101"].replace("Propuesto", "Eliminado")}))
+        sw = {"SW-901": tr.Requirement("SW-901", ["SYS-11"], "main", "Prueba.", "Implementado")}
+        self.assertIn("SYS-10", tr.uncovered_sys(sw, hw))
+
 if __name__ == "__main__":
     unittest.main()
