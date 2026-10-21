@@ -22,6 +22,26 @@ env:
   CLANG_FORMAT_VERSION: 21.1.8
 
 jobs:
+  # Qué cambió en el PR: el build del firmware solo corre si toca algo que lo afecta.
+  changes:
+    name: Cambios
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      firmware: ${{ steps.filter.outputs.firmware }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            firmware:
+              - '03_firmware/**'
+              - '07_tools/01_scripts/check_size.py'
+              - '.github/workflows/pr-checks.yml'
+
   format:
     name: Formato
     runs-on: ubuntu-24.04
@@ -68,18 +88,41 @@ jobs:
 
   firmware:
     name: Build del firmware
+    needs: changes
+    # Un job saltado cuenta como aprobado para la protección de main. En main siempre se construye: deja artefactos.
+    if: github.event_name == 'push' || needs.changes.outputs.firmware == 'true'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      # Las cachés de main las pueden leer los PRs; la de un PR solo la usa su propia rama.
+      - name: Caché de ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-idf-v6.1-${{ hashFiles('03_firmware/sdkconfig', '03_firmware/dependencies.lock') }}-${{ github.sha }}
+          restore-keys: |
+            ccache-idf-v6.1-${{ hashFiles('03_firmware/sdkconfig', '03_firmware/dependencies.lock') }}-
+            ccache-idf-v6.1-
+      - name: Caché de componentes del registro
+        uses: actions/cache@v4
+        with:
+          path: 03_firmware/managed_components
+          key: components-${{ hashFiles('03_firmware/dependencies.lock') }}
       - name: Build y guardas de tamaño
         uses: espressif/esp-idf-ci-action@v1
         with:
           esp_idf_version: v6.1
           target: esp32
           path: 03_firmware
+          # ccache guarda en el workspace (montado en el contenedor) para que actions/cache lo conserve.
+          # COMPILERCHECK=content: IDF genera en build/ el archivo de -specs= en cada build y, con el
+          # default (mtime), su fecha entra al hash y ningún objeto se reutiliza entre corridas.
           # El reporte va a un archivo: GITHUB_STEP_SUMMARY no existe dentro del contenedor.
           command: >-
-            idf.py build &&
+            export CCACHE_DIR="$PWD/../.ccache" CCACHE_MAXSIZE=500M CCACHE_COMPILERCHECK=content &&
+            ccache -z &&
+            idf.py --ccache build &&
+            ccache -s &&
             python ../07_tools/01_scripts/check_size.py > build/size_report.md;
             status=$?; cat build/size_report.md; exit $status
       - name: Resumen de tamaño
