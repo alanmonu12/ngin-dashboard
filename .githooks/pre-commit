@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Pre-commit local: los mismos checks de Formato y Tests en host que corren en CI, antes de cada commit.
+# Se activa una vez por clon:   git config core.hooksPath .githooks
+# Para saltarlo en un commit:   git commit --no-verify
+set -euo pipefail
+
+ROOT=$(git rev-parse --show-toplevel)
+cd "$ROOT"
+
+# Solo lo que va en el commit (staged), sin archivos borrados.
+mapfile -t STAGED < <(git diff --cached --name-only --diff-filter=ACMR)
+[ ${#STAGED[@]} -eq 0 ] && exit 0
+
+# --- Formato: mismas carpetas que el job de CI, revisando el contenido staged, no la copia de trabajo.
+SOURCES=()
+for f in "${STAGED[@]}"; do
+    if [[ $f =~ ^03_firmware/(main|components|bsp|test)/.*\.[ch]$ && $f != */build/* ]]; then
+        SOURCES+=("$f")
+    fi
+done
+
+if [ ${#SOURCES[@]} -gt 0 ]; then
+    # El de esp-clang es la referencia (CODING_STYLE.md §1); si no está, el del PATH.
+    CF=${CLANG_FORMAT:-$(ls ~/.espressif/tools/esp-clang/*/esp-clang/bin/clang-format 2>/dev/null | head -1)}
+    CF=${CF:-$(command -v clang-format || true)}
+    if [ -z "$CF" ]; then
+        echo "pre-commit: no encontré clang-format (esp-clang ni PATH); define CLANG_FORMAT." >&2
+        exit 1
+    fi
+
+    BAD=()
+    for f in "${SOURCES[@]}"; do
+        if ! git show ":$f" | "$CF" --style=file --assume-filename="$f" --dry-run -Werror >/dev/null 2>&1; then
+            BAD+=("$f")
+        fi
+    done
+    if [ ${#BAD[@]} -gt 0 ]; then
+        echo "pre-commit: sin formato:" >&2
+        printf '  %s\n' "${BAD[@]}" >&2
+        echo "Corrige con:  $CF -i ${BAD[*]} && git add ${BAD[*]}" >&2
+        exit 1
+    fi
+fi
+
+# --- Tests en host: solo si el commit toca código que compilan (componentes o los propios tests).
+NEEDS_TESTS=0
+for f in "${STAGED[@]}"; do
+    [[ $f =~ ^03_firmware/(components|test/host)/ ]] && NEEDS_TESTS=1 && break
+done
+[ $NEEDS_TESTS -eq 0 ] && exit 0
+
+# Unity con fixtures: la copia de ESP-IDF, activo o instalado en ~/.espressif (no hace falta get_idf).
+UNITY=""
+if [ -n "${IDF_PATH:-}" ]; then
+    UNITY="$IDF_PATH/components/unity/unity"
+else
+    UNITY=$(ls -d ~/.espressif/v*/esp-idf/components/unity/unity 2>/dev/null | sort -V | tail -1)
+fi
+if [ ! -f "$UNITY/src/unity.c" ]; then
+    echo "pre-commit: no encontré Unity; activa ESP-IDF (get_idf) o instala ESP-IDF en ~/.espressif." >&2
+    exit 1
+fi
+
+# Build incremental fuera del árbol de trabajo. Corre sobre la copia de trabajo, no solo lo staged.
+BUILD="$(git rev-parse --git-dir)/pre-commit-host-tests"
+GEN=()
+command -v ninja >/dev/null && GEN=(-G Ninja)
+LOG=$(mktemp)
+trap 'rm -f "$LOG"' EXIT
+if ! { cmake -S 03_firmware/test/host -B "$BUILD" "${GEN[@]}" -DUNITY_DIR="$UNITY" \
+        && cmake --build "$BUILD" \
+        && ctest --test-dir "$BUILD" --output-on-failure; } >"$LOG" 2>&1; then
+    cat "$LOG" >&2
+    echo "pre-commit: fallaron los tests en host." >&2
+    exit 1
+fi
+echo "pre-commit: formato y tests en host OK."
