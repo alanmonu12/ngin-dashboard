@@ -130,3 +130,20 @@ Se verifica en host la lógica (SW-301, SW-303 sin el tiempo, SW-304 y SW-305); 
 | SW-504 | El firmware debe mostrar el tiempo de 0 a 100 km/h truncado a 0.01 s. | SYS-27, SYS-28 | ui | Demostración en la tarjeta (falta): 6789 ms se muestran como 6.78 s. | Implementado | Truncar evita mostrar un tiempo menor que el medido. |
 
 _El resto (navegación, pantalla de ajustes): pendiente._
+
+## SW-9xx Arranque, errores y recursos
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-901 | Cuando se aplica la alimentación, el firmware debe mostrar la pantalla de boost en menor o igual a 3 s. | SYS-29 | main | Demostración en la tarjeta (falta): video desde que se conecta la alimentación hasta la pantalla de boost con valores. | Implementado | Orden de arranque en `app_main`: ajustes, pantalla, inicio, fuente, lógica y UI. 3 s TBD, igual que SYS-29: falta medirlo (incluye el bootloader y la prueba de la PSRAM). |
+| SW-902 | Si falla la inicialización de la memoria no volátil, el firmware debe reiniciar el ESP32. | derivado | main | Inspección: `ESP_ERROR_CHECK(settings_init())` en `app_main` con `CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`. | Implementado | Sin NVS no hay ajustes ni calibración. `settings_init` ya borra y reintenta una NVS llena o de otra versión: si aun así falla, es la flash. Va antes que la pantalla, así que no puede avisar en ella; el aviso queda en el log. |
+| SW-903 | Si falla la inicialización de la pantalla, el firmware debe reiniciar el ESP32. | derivado | main | Inspección: `ESP_ERROR_CHECK(bsp_display_start())` en `app_main` con `CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`. | Implementado | Sin pantalla el equipo no tiene función. Una falla del touch no cuenta: se avisa en el log y la pantalla sigue mostrando datos. |
+| SW-904 | Si la fuente de datos no se puede crear o iniciar, el firmware debe mostrar el Aviso_Sin_Datos sobre la pantalla de boost. | SYS-30 | main | Demostración en la tarjeta (falta): build de prueba con `data_source_start` que regresa error. | Implementado | Decisión de arquitectura: una falla de CAN o de la ECU degrada con aviso y la pantalla sigue. El aviso cuando dejan de llegar datos con la fuente ya iniciada es de SW-6xx (#18). |
+| SW-905 | Si una tarea no cede la CPU durante 5 s o más, el firmware debe reiniciar el ESP32. | SYS-31 | main | Prueba en la tarjeta (falta): build de prueba con un bucle sin ceder en la tarea de LVGL; pasa si reinicia en 6 s o menos y el log muestra el backtrace. | Propuesto | El watchdog de tareas vigila las tareas idle de los dos núcleos a 5 s, pero hoy solo avisa por el log (`CONFIG_ESP_TASK_WDT_PANIC` desactivado): la pantalla se queda congelada. Falta activarlo. |
+| SW-906 | Antes de reiniciar por un panic, el firmware debe enviar el backtrace por el puerto serial. | derivado | main | Inspección de `sdkconfig` (`CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`). Demostración con `read_log.py`, que decodifica el backtrace con el `.elf` del build. | Implementado | Diagnóstico de reinicios en banco y en el auto. |
+| SW-907 | El firmware debe ubicar los buffers de dibujo de la pantalla en RAM interna con acceso por DMA. | derivado | bsp | Inspección: `buff_dma = true` en `bsp.c`. | Implementado | El DMA de SPI del ESP32 no lee PSRAM. Dos buffers de 40 líneas de 480 píxeles a 16 bits: 76.8 KB de RAM interna. |
+| SW-908 | El firmware debe ocupar menor o igual a 85 % de la IRAM. | derivado | main | Análisis en CI en cada build: `check_size.py`. | Implementado | La IRAM es de 128 KB y ya se llenó una vez (LVGL en IRAM no cupo). Hoy, 50 %. |
+| SW-909 | El firmware debe ocupar menor o igual a 80 % de la partición de app más pequeña. | derivado | main | Análisis en CI en cada build: `check_size.py`. | Implementado | Margen para crecer sin cambiar la tabla de particiones. Hoy, 52 %. |
+
+SW-908 y SW-909 se revisan en cada build de CI, pero `trace.py` solo cuenta tests de host o pruebas en la tarjeta
+registradas: por eso siguen en Implementado.
