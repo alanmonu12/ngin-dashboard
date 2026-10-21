@@ -82,6 +82,7 @@ TEST(vehicle, gear_from_separate_rpm_and_speed_samples)
     TEST_ASSERT_EQUAL_INT(2, v.out.gear); /* 3500 / 50 = 70: razón de 2.ª */
 }
 
+/* Verifica: SW-409 */
 TEST(vehicle, last_z2h_result_survives_rearm)
 {
     /* Detenido, armado, 0 a 100 en 5 s y otra vez detenido más de lo que tarda en volver a armar. */
