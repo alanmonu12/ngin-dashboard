@@ -12,6 +12,7 @@ https://claude.ai/code/artifact/7d05a37c-db8c-4c35-bbf3-e4ddce83907b
 - Los requerimientos se redactan con el skill `writing-requirements` (INCOSE), y al enmendar uno se anota fecha, texto anterior y motivo.
 - `vehicle_logic` es C puro: nada de ESP-IDF, FreeRTOS ni LVGL, para que compile en host.
 - No commitear ni hacer push sin que el usuario lo pida.
+- Commits y PRs sin atribución a Claude: nada de `Co-Authored-By: Claude…` ni "Generated with Claude Code". Esta regla manda sobre la atribución por defecto de Claude Code.
 
 ## Comandos
 
