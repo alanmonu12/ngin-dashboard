@@ -236,14 +236,15 @@ static void refresh_rpm(const vehicle_outputs_t *o)
         }
     }
 
-    /* SYS-18: LEDs encendidos en proporción a las RPM; SYS-05: al cambio parpadean todos en rojo */
+    /* SYS-18: LEDs encendidos en proporción a las RPM; SYS-05: al cambio parpadean los 15, cada uno en su
+     * color. Solo cambia el brillo, no el color: el tearing (el panel no expone TE) se nota menos. */
     int lit = (int)(o->bar_fraction * LED_COUNT);
     bool blink_on = (lv_tick_get() / BLINK_HALF_MS) % 2 == 0;
     lv_color_t want[LED_COUNT];
     int changed = 0;
     for (int i = 0; i < LED_COUNT; i++) {
         if (o->shift_alarm) {
-            want[i] = blink_on ? COLOR_RED : ui.led_off[i];
+            want[i] = blink_on ? ui.led_on[i] : ui.led_off[i];
         } else {
             want[i] = i < lit ? ui.led_on[i] : ui.led_off[i];
         }

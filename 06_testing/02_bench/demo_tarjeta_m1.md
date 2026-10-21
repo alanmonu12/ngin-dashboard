@@ -39,8 +39,8 @@ marcha.
 ### SW-306 Parpadeo de la Alarma_Cambio
 
 1. `bench live` y pasar a la pantalla de RPM.
-2. **Pasa si** al llegar a 6000 rpm los 15 LED_Simulado parpadean juntos en rojo. La frecuencia (4.2 Hz) se
-   verifica por análisis del código: no se mide.
+2. **Pasa si** al llegar a 6000 rpm los 15 LED_Simulado parpadean juntos, cada uno en su color. La frecuencia
+   (4.2 Hz) se verifica por análisis del código: no se mide.
 
 ### SW-505 y SW-506 Cambio de pantalla en ≤ 300 ms
 
