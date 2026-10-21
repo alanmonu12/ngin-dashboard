@@ -1,0 +1,17 @@
+[   0.022] >>> puerto abierto
+[   0.224] I (4894) app: TE? GPIO0: 1 flancos/s, nivel 0
+[   0.224] I (4894) app: TE? GPIO2: 0 flancos/s, nivel 0
+[   0.224] I (4894) app: TE? GPIO4: 0 flancos/s, nivel 0
+[   0.224] I (4895) app: TE? GPIO5: 0 flancos/s, nivel 1
+[   0.224] I (4899) app: TE? GPIO12: 0 flancos/s, nivel 0
+[   0.224] I (4903) app: TE? GPIO25: 0 flancos/s, nivel 0
+[   0.224] I (4907) app: TE? GPIO26: 0 flancos/s, nivel 0
+[   0.224] I (4911) app: TE? GPIO27: 0 flancos/s, nivel 0
+[   0.224] I (4915) app: TE? GPIO32: 0 flancos/s, nivel 0
+[   0.224] I (4920) app: TE? GPIO33: 0 flancos/s, nivel 0
+[   0.224] I (4924) app: TE? GPIO34: 0 flancos/s, nivel 0
+[   0.224] I (4928) app: TE? GPIO35: 0 flancos/s, nivel 0
+[   0.224] I (4932) app: TE? GPIO36: 0 flancos/s, nivel 1
+[   0.224] I (4936) app: TE? GPIO39: 0 flancos/s, nivel 1
+[   0.224] I (4950) main_task: Returned from app_main()
+[   4.042] >>> bench live

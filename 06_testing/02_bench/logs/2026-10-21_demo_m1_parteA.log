@@ -1,0 +1,260 @@
+[   0.023] >>> puerto abierto
+[   4.046] >>> bench live
+[   4.097] bench live
+[   4.097] bench> 
+[  17.944] bench> I (28224) ui: valores en la pantalla nueva: 95 ms
+[  17.994] I (28307) ui: cambio de pantalla: 175 ms
+[  29.471] I (39767) ui: valores en la pantalla nueva: 80 ms
+[  29.521] I (39835) ui: cambio de pantalla: 150 ms
+[  30.479] I (40756) ui: valores en la pantalla nueva: 55 ms
+[  30.580] I (40865) ui: cambio de pantalla: 165 ms
+[  31.285] I (41602) ui: valores en la pantalla nueva: 80 ms
+[  31.386] I (41680) ui: cambio de pantalla: 160 ms
+[  32.846] I (43121) ui: valores en la pantalla nueva: 65 ms
+[  32.947] I (43254) ui: cambio de pantalla: 200 ms
+[  33.701] I (44003) ui: valores en la pantalla nueva: 55 ms
+[  33.802] I (44123) ui: cambio de pantalla: 180 ms
+[  34.457] I (44777) ui: valores en la pantalla nueva: 50 ms
+[  34.608] I (44902) ui: cambio de pantalla: 175 ms
+[  44.677] I (54951) ui: valores en la pantalla nueva: 85 ms
+[  44.727] I (55018) ui: cambio de pantalla: 155 ms
+[  47.298] I (57599) ui: valores en la pantalla nueva: 65 ms
+[  47.448] I (57724) ui: cambio de pantalla: 190 ms
+[  49.009] I (59305) ui: valores en la pantalla nueva: 75 ms
+[  49.160] I (59437) ui: cambio de pantalla: 205 ms
+[  52.031] I (62308) ui: valores en la pantalla nueva: 5 ms
+[  52.182] I (62501) ui: cambio de pantalla: 200 ms
+[  54.902] I (65191) ui: valores en la pantalla nueva: 85 ms
+[  54.952] I (65256) ui: cambio de pantalla: 150 ms
+[  56.161] I (66448) ui: valores en la pantalla nueva: 75 ms
+[  56.212] I (66519) ui: cambio de pantalla: 150 ms
+[  66.816] >>> puerto cerrado (USB desconectado)
+[  70.254] >>> puerto abierto
+[  71.057] I (1291) esp_psram: SPI SRAM memory test OK
+[  71.107] I (1299) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[  71.107] I (1299) cpu_start: Pro cpu start user code
+[  71.107] I (1299) cpu_start: cpu freq: 240000000 Hz
+[  71.107] I (1301) app_init: Application information:
+[  71.107] I (1305) app_init: Project name:     esp32_dashboard
+[  71.107] I (1309) app_init: App version:      cfaaef6
+[  71.107] I (1313) app_init: Compile time:     Oct 21 2026 02:52:43
+[  71.107] I (1319) app_init: ELF file SHA256:  187408406...
+[  71.107] I (1323) app_init: ESP-IDF:          v6.1
+[  71.107] I (1327) efuse_init: Min chip rev:     v0.0
+[  71.157] I (1331) efuse_init: Max chip rev:     v3.99 
+[  71.157] I (1335) efuse_init: Chip rev:         v1.0
+[  71.157] I (1339) heap_init: Initializing. RAM available for dynamic allocation:
+[  71.157] I (1345) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[  71.157] I (1350) heap_init: At 3FFB50E0 len 0002AF20 (171 KiB): DRAM
+[  71.157] I (1356) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[  71.157] I (1361) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[  71.157] I (1367) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[  71.208] I (1373) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[  71.208] I (1380) spi_flash: detected chip: generic
+[  71.208] I (1382) spi_flash: flash io: dio
+[  71.208] I (1387) main_task: Started on CPU0
+[  71.208] I (1388) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[  71.208] I (1397) main_task: Calling app_main()
+[  71.208] I (1421) st7796: version: 1.5.0
+[  71.208] I (1422) st7796_general: LCD panel create success, version: 1.5.0
+[  71.460] I (1653) LVGL: Starting LVGL task
+[  71.561] I (1788) ui: cambio de pantalla: 130 ms
+[  72.217] [5n
+[  72.217] Type 'help' to get the list of commands.
+[  72.217] Use UP/DOWN arrows to navigate through command history.
+[  72.217] Press TAB when typing command name to auto-complete.
+[  72.217] 
+[  72.217] Your terminal application does not support escape sequences.
+[  72.217] 
+[  72.217] Line editing and history features are disabled.
+[  72.217] 
+[  72.217] On Windows, try using Windows Terminal or Putty instead.
+[  72.217] bench> W (2405) bench: build de banco: consola bench activa, fuente con valores fijos
+[  72.217] I (2435) sim: simulador iniciado
+[  72.217] I (2435) app: fuente de datos: banco
+[  72.217] I (2436) main_task: Returned from app_main()
+[  72.217] I (2438) bench: primer cuadro con datos: 2438 ms desde el reset
+[  80.169] >>> puerto cerrado (USB desconectado)
+[  91.422] >>> puerto abierto
+[  92.227] I (1291) esp_psram: SPI SRAM memory test OK
+[  92.227] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[  92.227] I (1299) cpu_start: Pro cpu start user code
+[  92.227] I (1299) cpu_start: cpu freq: 240000000 Hz
+[  92.227] I (1301) app_init: Application information:
+[  92.227] I (1305) app_init: Project name:     esp32_dashboard
+[  92.277] I (1309) app_init: App version:      cfaaef6
+[  92.277] I (1313) app_init: Compile time:     Oct 21 2026 02:52:43
+[  92.277] I (1319) app_init: ELF file SHA256:  187408406...
+[  92.277] I (1323) app_init: ESP-IDF:          v6.1
+[  92.277] I (1327) efuse_init: Min chip rev:     v0.0
+[  92.277] I (1331) efuse_init: Max chip rev:     v3.99 
+[  92.277] I (1335) efuse_init: Chip rev:         v1.0
+[  92.277] I (1339) heap_init: Initializing. RAM available for dynamic allocation:
+[  92.277] I (1345) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[  92.327] I (1350) heap_init: At 3FFB50E0 len 0002AF20 (171 KiB): DRAM
+[  92.327] I (1356) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[  92.327] I (1361) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[  92.327] I (1367) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[  92.327] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[  92.327] I (1380) spi_flash: detected chip: generic
+[  92.327] I (1382) spi_flash: flash io: dio
+[  92.327] I (1387) main_task: Started on CPU0
+[  92.327] I (1388) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[  92.327] I (1397) main_task: Calling app_main()
+[  92.327] I (1421) st7796: version: 1.5.0
+[  92.327] I (1422) st7796_general: LCD panel create success, version: 1.5.0
+[  92.579] I (1653) LVGL: Starting LVGL task
+[  92.730] I (1788) ui: cambio de pantalla: 130 ms
+[  93.335] [5n
+[  93.335] Type 'help' to get the list of commands.
+[  93.335] Use UP/DOWN arrows to navigate through command history.
+[  93.335] Press TAB when typing command name to auto-complete.
+[  93.335] 
+[  93.335] Your terminal application does not support escape sequences.
+[  93.335] 
+[  93.335] Line editing and history features are disabled.
+[  93.335] 
+[  93.335] On Windows, try using Windows Terminal or Putty instead.
+[  93.386] bench> W (2403) bench: build de banco: consola bench activa, fuente con valores fijos
+[  93.386] I (2433) sim: simulador iniciado
+[  93.386] I (2433) app: fuente de datos: banco
+[  93.386] I (2434) main_task: Returned from app_main()
+[  93.386] I (2445) bench: primer cuadro con datos: 2445 ms desde el reset
+[  96.799] >>> puerto cerrado (USB desconectado)
+[ 106.651] >>> puerto abierto
+[ 107.405] I (1291) esp_psram: SPI SRAM memory test OK
+[ 107.456] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[ 107.456] I (1299) cpu_start: Pro cpu start user code
+[ 107.456] I (1299) cpu_start: cpu freq: 240000000 Hz
+[ 107.456] I (1301) app_init: Application information:
+[ 107.456] I (1305) app_init: Project name:     esp32_dashboard
+[ 107.456] I (1309) app_init: App version:      cfaaef6
+[ 107.456] I (1313) app_init: Compile time:     Oct 21 2026 02:52:43
+[ 107.456] I (1319) app_init: ELF file SHA256:  187408406...
+[ 107.456] I (1323) app_init: ESP-IDF:          v6.1
+[ 107.456] I (1327) efuse_init: Min chip rev:     v0.0
+[ 107.506] I (1331) efuse_init: Max chip rev:     v3.99 
+[ 107.506] I (1335) efuse_init: Chip rev:         v1.0
+[ 107.506] I (1339) heap_init: Initializing. RAM available for dynamic allocation:
+[ 107.506] I (1345) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[ 107.506] I (1350) heap_init: At 3FFB50E0 len 0002AF20 (171 KiB): DRAM
+[ 107.506] I (1356) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[ 107.506] I (1361) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[ 107.506] I (1367) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[ 107.556] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[ 107.556] I (1380) spi_flash: detected chip: generic
+[ 107.557] I (1382) spi_flash: flash io: dio
+[ 107.557] I (1387) main_task: Started on CPU0
+[ 107.557] I (1388) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[ 107.557] I (1397) main_task: Calling app_main()
+[ 107.557] I (1421) st7796: version: 1.5.0
+[ 107.557] I (1422) st7796_general: LCD panel create success, version: 1.5.0
+[ 107.809] I (1653) LVGL: Starting LVGL task
+[ 107.909] I (1788) ui: cambio de pantalla: 130 ms
+[ 108.564] [5n
+[ 108.564] Type 'help' to get the list of commands.
+[ 108.564] Use UP/DOWN arrows to navigate through command history.
+[ 108.564] Press TAB when typing command name to auto-complete.
+[ 108.564] 
+[ 108.564] Your terminal application does not support escape sequences.
+[ 108.564] 
+[ 108.564] Line editing and history features are disabled.
+[ 108.564] 
+[ 108.564] On Windows, try using Windows Terminal or Putty instead.
+[ 108.564] bench> W (2403) bench: build de banco: consola bench activa, fuente con valores fijos
+[ 108.564] I (2433) sim: simulador iniciado
+[ 108.564] I (2433) app: fuente de datos: banco
+[ 108.564] I (2434) main_task: Returned from app_main()
+[ 108.564] I (2445) bench: primer cuadro con datos: 2445 ms desde el reset
+[ 113.955] >>> puerto cerrado (USB desconectado)
+[ 123.608] >>> puerto abierto
+[ 124.360] I (1291) esp_psram: SPI SRAM memory test OK
+[ 124.412] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[ 124.412] I (1299) cpu_start: Pro cpu start user code
+[ 124.412] I (1299) cpu_start: cpu freq: 240000000 Hz
+[ 124.412] I (1301) app_init: Application information:
+[ 124.412] I (1305) app_init: Project name:     esp32_dashboard
+[ 124.412] I (1309) app_init: App version:      cfaaef6
+[ 124.412] I (1313) app_init: Compile time:     Oct 21 2026 02:52:43
+[ 124.412] I (1319) app_init: ELF file SHA256:  187408406...
+[ 124.412] I (1323) app_init: ESP-IDF:          v6.1
+[ 124.412] I (1327) efuse_init: Min chip rev:     v0.0
+[ 124.462] I (1331) efuse_init: Max chip rev:     v3.99 
+[ 124.462] I (1335) efuse_init: Chip rev:         v1.0
+[ 124.462] I (1339) heap_init: Initializing. RAM available for dynamic allocation:
+[ 124.462] I (1345) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[ 124.462] I (1350) heap_init: At 3FFB50E0 len 0002AF20 (171 KiB): DRAM
+[ 124.462] I (1356) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[ 124.462] I (1361) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[ 124.462] I (1367) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[ 124.512] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[ 124.512] I (1380) spi_flash: detected chip: generic
+[ 124.512] I (1382) spi_flash: flash io: dio
+[ 124.512] I (1387) main_task: Started on CPU0
+[ 124.512] I (1388) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[ 124.512] I (1397) main_task: Calling app_main()
+[ 124.512] I (1421) st7796: version: 1.5.0
+[ 124.512] I (1422) st7796_general: LCD panel create success, version: 1.5.0
+[ 124.764] I (1653) LVGL: Starting LVGL task
+[ 124.864] I (1788) ui: cambio de pantalla: 130 ms
+[ 125.519] [5n
+[ 125.520] Type 'help' to get the list of commands.
+[ 125.520] Use UP/DOWN arrows to navigate through command history.
+[ 125.520] Press TAB when typing command name to auto-complete.
+[ 125.520] 
+[ 125.520] Your terminal application does not support escape sequences.
+[ 125.520] 
+[ 125.520] Line editing and history features are disabled.
+[ 125.520] 
+[ 125.520] On Windows, try using Windows Terminal or Putty instead.
+[ 125.520] bench> W (2403) bench: build de banco: consola bench activa, fuente con valores fijos
+[ 125.520] I (2433) sim: simulador iniciado
+[ 125.520] I (2433) app: fuente de datos: banco
+[ 125.520] I (2434) main_task: Returned from app_main()
+[ 125.520] I (2445) bench: primer cuadro con datos: 2445 ms desde el reset
+[ 131.924] >>> puerto cerrado (USB desconectado)
+[ 137.166] >>> puerto abierto
+[ 137.820] I (1291) esp_psram: SPI SRAM memory test OK
+[ 137.870] I (1299) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[ 137.870] I (1299) cpu_start: Pro cpu start user code
+[ 137.870] I (1299) cpu_start: cpu freq: 240000000 Hz
+[ 137.870] I (1301) app_init: Application information:
+[ 137.870] I (1305) app_init: Project name:     esp32_dashboard
+[ 137.870] I (1310) app_init: App version:      cfaaef6
+[ 137.870] I (1313) app_init: Compile time:     Oct 21 2026 02:52:43
+[ 137.870] I (1319) app_init: ELF file SHA256:  187408406...
+[ 137.870] I (1323) app_init: ESP-IDF:          v6.1
+[ 137.870] I (1327) efuse_init: Min chip rev:     v0.0
+[ 137.870] I (1331) efuse_init: Max chip rev:     v3.99 
+[ 137.870] I (1335) efuse_init: Chip rev:         v1.0
+[ 137.870] I (1339) heap_init: Initializing. RAM available for dynamic allocation:
+[ 137.870] I (1345) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[ 137.921] I (1350) heap_init: At 3FFB50E0 len 0002AF20 (171 KiB): DRAM
+[ 137.921] I (1356) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[ 137.921] I (1361) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[ 137.921] I (1367) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[ 137.921] I (1373) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[ 137.921] I (1380) spi_flash: detected chip: generic
+[ 137.921] I (1382) spi_flash: flash io: dio
+[ 137.921] I (1387) main_task: Started on CPU0
+[ 137.921] I (1388) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[ 137.921] I (1397) main_task: Calling app_main()
+[ 137.971] I (1421) st7796: version: 1.5.0
+[ 137.971] I (1422) st7796_general: LCD panel create success, version: 1.5.0
+[ 138.172] I (1653) LVGL: Starting LVGL task
+[ 138.323] I (1788) ui: cambio de pantalla: 130 ms
+[ 138.927] [5n
+[ 138.927] Type 'help' to get the list of commands.
+[ 138.927] Use UP/DOWN arrows to navigate through command history.
+[ 138.927] Press TAB when typing command name to auto-complete.
+[ 138.927] 
+[ 138.927] Your terminal application does not support escape sequences.
+[ 138.927] 
+[ 138.977] Line editing and history features are disabled.
+[ 138.977] 
+[ 138.977] On Windows, try using Windows Terminal or Putty instead.
+[ 138.977] bench> W (2403) bench: build de banco: consola bench activa, fuente con valores fijos
+[ 138.977] I (2433) sim: simulador iniciado
+[ 138.977] I (2433) app: fuente de datos: banco
+[ 138.977] I (2434) main_task: Returned from app_main()
+[ 138.977] I (2445) bench: primer cuadro con datos: 2445 ms desde el reset
