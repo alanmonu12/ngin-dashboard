@@ -27,6 +27,7 @@ TEST_SETUP(vehicle)
 
 TEST_TEAR_DOWN(vehicle) {}
 
+/* Verifica: SW-101, SW-107 */
 TEST(vehicle, boost_uses_last_baro_and_tracks_peak)
 {
     vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 0, .fields = VEHICLE_HAS_BARO, .baro_kpa = 78.0f});
@@ -36,6 +37,7 @@ TEST(vehicle, boost_uses_last_baro_and_tracks_peak)
     TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.00f, v.out.boost_peak_bar);
 }
 
+/* Verifica: SW-303 */
 TEST(vehicle, shift_rpm_follows_the_gear)
 {
     /* 1.ª cambia a 5500, 2.ª a 6000: 5800 rpm alarma en 1.ª pero no en 2.ª */
@@ -61,6 +63,7 @@ TEST(vehicle, fields_seen_accumulates)
     TEST_ASSERT_EQUAL_UINT32(VEHICLE_HAS_RPM | VEHICLE_HAS_MAP, v.fields_seen);
 }
 
+/* Verifica: SW-105 */
 TEST(vehicle, baro_before_any_map_shows_no_boost)
 {
     /* Sin MAP todavía, el valor inicial de map_kpa no debe dar un boost ni un pico falsos. */
@@ -69,6 +72,7 @@ TEST(vehicle, baro_before_any_map_shows_no_boost)
     TEST_ASSERT_EQUAL_FLOAT(0.0f, v.out.boost_peak_bar);
 }
 
+/* Verifica: SW-201 */
 TEST(vehicle, gear_from_separate_rpm_and_speed_samples)
 {
     /* OBD entrega 0x0C y 0x0D en respuestas separadas. */
@@ -78,6 +82,7 @@ TEST(vehicle, gear_from_separate_rpm_and_speed_samples)
     TEST_ASSERT_EQUAL_INT(2, v.out.gear); /* 3500 / 50 = 70: razón de 2.ª */
 }
 
+/* Verifica: SW-409 */
 TEST(vehicle, last_z2h_result_survives_rearm)
 {
     /* Detenido, armado, 0 a 100 en 5 s y otra vez detenido más de lo que tarda en volver a armar. */
@@ -99,6 +104,27 @@ TEST(vehicle, last_z2h_result_survives_rearm)
     TEST_ASSERT_EQUAL_UINT32(result, v.out.z2h_ms);
 }
 
+/* Verifica: SW-106 */
+TEST(vehicle, default_baro_until_pid_0x33)
+{
+    vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 0, .fields = VEHICLE_HAS_MAP, .map_kpa = 201.3f});
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.00f, v.out.boost_bar);
+}
+
+/* Verifica: SW-305 */
+TEST(vehicle, no_gear_uses_lowest_shift_rpm)
+{
+    /* A 5 km/h no hay marcha: manda la RPM_Cambio de 1.ª (5500), la más baja. */
+    vehicle_on_sample(
+        &v, &(vehicle_sample_t){
+                .t_ms = 0, .fields = VEHICLE_HAS_RPM | VEHICLE_HAS_SPEED, .rpm = 5500.0f, .speed_kmh = 5.0f});
+    TEST_ASSERT_EQUAL_INT(VEHICLE_GEAR_NONE, v.out.gear);
+    TEST_ASSERT_TRUE(v.out.shift_alarm);
+
+    vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 1000, .fields = VEHICLE_HAS_RPM, .rpm = 5400.0f});
+    TEST_ASSERT_FALSE(v.out.shift_alarm);
+}
+
 TEST_GROUP_RUNNER(vehicle)
 {
     RUN_TEST_CASE(vehicle, boost_uses_last_baro_and_tracks_peak);
@@ -107,4 +133,6 @@ TEST_GROUP_RUNNER(vehicle)
     RUN_TEST_CASE(vehicle, baro_before_any_map_shows_no_boost);
     RUN_TEST_CASE(vehicle, gear_from_separate_rpm_and_speed_samples);
     RUN_TEST_CASE(vehicle, last_z2h_result_survives_rearm);
+    RUN_TEST_CASE(vehicle, default_baro_until_pid_0x33);
+    RUN_TEST_CASE(vehicle, no_gear_uses_lowest_shift_rpm);
 }

@@ -77,6 +77,8 @@ Sin abreviaturas inventadas: `z2h` y `rpm` están en el glosario del documento v
 - Un bug corregido lleva un test que fallaba antes de la corrección.
 - Un grupo de Unity por módulo; nombres de test que describan el comportamiento (`stopping_aborts`).
 - Las pruebas de varios módulos juntos van en `test/host/integration/`.
+- Cada test cita los requisitos que verifica en la línea anterior a su `TEST(...)`: `/* Verifica: SW-101, SW-105 */`
+  (`01_docs/01_requirements/software.md`).
 
 ## 9. Ramas, commits y PRs — CI y revisión
 

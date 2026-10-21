@@ -46,6 +46,7 @@ static vehicle_z2h_state_t run_launch(uint32_t launch_ms, uint32_t run_ms, uint3
     return st;
 }
 
+/* Verifica: SW-401 */
 TEST(z2h, needs_to_be_stopped_to_arm)
 {
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_IDLE, vehicle_z2h_update(&z, &cfg, 0, 0.0f));
@@ -53,12 +54,14 @@ TEST(z2h, needs_to_be_stopped_to_arm)
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_ARMED, vehicle_z2h_update(&z, &cfg, 1000, 0.0f));
 }
 
+/* Verifica: SW-401 */
 TEST(z2h, rolling_start_does_not_arm)
 {
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_IDLE, vehicle_z2h_update(&z, &cfg, 0, 20.0f));
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_IDLE, vehicle_z2h_update(&z, &cfg, 2000, 100.0f));
 }
 
+/* Verifica: SW-403, SW-404, SW-405 */
 TEST(z2h, measures_within_0_2_s_at_10_hz)
 {
     /* SYS-08: ±0.2 s con muestreo de 10 Hz y resolución de 1 km/h, con varios desfases */
@@ -69,6 +72,7 @@ TEST(z2h, measures_within_0_2_s_at_10_hz)
     }
 }
 
+/* Verifica: SW-402, SW-406 */
 TEST(z2h, stopping_aborts)
 {
     vehicle_z2h_update(&z, &cfg, 0, 0.0f);
@@ -78,6 +82,7 @@ TEST(z2h, stopping_aborts)
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_ABORTED, vehicle_z2h_update(&z, &cfg, 1300, 0.0f));
 }
 
+/* Verifica: SW-401 */
 TEST(z2h, rearms_after_a_run)
 {
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_DONE, run_launch(1500, 7000, 100, 0));
@@ -86,6 +91,7 @@ TEST(z2h, rearms_after_a_run)
     TEST_ASSERT_EQUAL(VEHICLE_Z2H_ARMED, vehicle_z2h_update(&z, &cfg, t + 1000, 0.0f));
 }
 
+/* Verifica: SW-408 */
 TEST(z2h, measures_across_uint32_wrap_and_long_uptime)
 {
     /* ~49.7 días encendido: el contador de ms da la vuelta a mitad de la medición. */
@@ -102,6 +108,35 @@ TEST(z2h, measures_across_uint32_wrap_and_long_uptime)
     TEST_ASSERT_INT_WITHIN(200, run_ms, z.result_ms);
 }
 
+/* Armado a los 1000 ms y arranque con 1 y 3 km/h: el Instante_Arranque se estima en 1050 ms. */
+static void arm_and_launch(void)
+{
+    vehicle_z2h_update(&z, &cfg, 0, 0.0f);
+    vehicle_z2h_update(&z, &cfg, 1000, 0.0f);
+    vehicle_z2h_update(&z, &cfg, 1100, 1.0f);
+    vehicle_z2h_update(&z, &cfg, 1200, 3.0f);
+}
+
+/* Verifica: SW-410 */
+TEST(z2h, elapsed_counts_from_estimated_start)
+{
+    arm_and_launch();
+    TEST_ASSERT_EQUAL(VEHICLE_Z2H_RUNNING, z.state);
+    TEST_ASSERT_EQUAL_UINT32(450, vehicle_z2h_elapsed_ms(&z, 1500));
+}
+
+/* Verifica: SW-407 */
+TEST(z2h, too_long_aborts)
+{
+    arm_and_launch();
+    uint32_t t = 1300;
+    for (; t <= 31000; t += 100) {
+        vehicle_z2h_update(&z, &cfg, t, 10.0f);
+    }
+    TEST_ASSERT_EQUAL(VEHICLE_Z2H_RUNNING, z.state); /* 29.95 s desde el arranque */
+    TEST_ASSERT_EQUAL(VEHICLE_Z2H_ABORTED, vehicle_z2h_update(&z, &cfg, t, 10.0f));
+}
+
 TEST_GROUP_RUNNER(z2h)
 {
     RUN_TEST_CASE(z2h, measures_across_uint32_wrap_and_long_uptime);
@@ -110,4 +145,6 @@ TEST_GROUP_RUNNER(z2h)
     RUN_TEST_CASE(z2h, measures_within_0_2_s_at_10_hz);
     RUN_TEST_CASE(z2h, stopping_aborts);
     RUN_TEST_CASE(z2h, rearms_after_a_run);
+    RUN_TEST_CASE(z2h, elapsed_counts_from_estimated_start);
+    RUN_TEST_CASE(z2h, too_long_aborts);
 }

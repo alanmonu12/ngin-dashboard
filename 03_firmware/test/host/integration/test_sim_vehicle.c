@@ -44,6 +44,7 @@ static void feed(uint32_t t_ms, uint32_t tick)
     vehicle_on_sample(&v, &s);
 }
 
+/* Verifica: SW-201, SW-303, SW-403 */
 TEST(sim_vehicle, full_pull_reports_gears_in_order_and_0_100_close_to_truth)
 {
     int last_gear = VEHICLE_GEAR_NONE, max_gear = 0, gear_drops = 0, alarm_edges = 0;
