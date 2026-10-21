@@ -721,6 +721,8 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # default:
 CONFIG_APP_SOURCE_SIMULATOR=y
+# default:
+# CONFIG_APP_BENCH is not set
 # end of Dashboard
 
 #

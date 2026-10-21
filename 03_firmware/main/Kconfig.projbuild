@@ -13,4 +13,13 @@ menu "Dashboard"
                 sin CAN ni auto. Sirve para desarrollar la UI y la lógica.
     endchoice
 
+    config APP_BENCH
+        bool "Build de banco (consola bench)"
+        default n
+        help
+            Consola "bench" por el puerto serial para las pruebas en la tarjeta
+            (06_testing/02_bench/demo_tarjeta_m1.md): valores fijos, ajustes,
+            fallas provocadas y latencia de dibujo. Arranca con valores fijos de
+            ralentí en lugar del simulador. Nunca en el build del auto.
+
 endmenu

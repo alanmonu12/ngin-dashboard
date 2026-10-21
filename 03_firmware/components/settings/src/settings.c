@@ -85,10 +85,8 @@ const app_settings_t *settings_get(void)
     return &current;
 }
 
-esp_err_t settings_save(const app_settings_t *s)
+static esp_err_t write_nvs(const app_settings_t *s)
 {
-    ESP_RETURN_ON_FALSE(valid(s), ESP_ERR_INVALID_ARG, TAG, "ajustes fuera de rango");
-
     nvs_handle_t h;
     ESP_RETURN_ON_ERROR(nvs_open(NVS_NAMESPACE, NVS_READWRITE, &h), TAG, "open");
     esp_err_t err = nvs_set_blob(h, NVS_KEY, s, sizeof(*s));
@@ -96,8 +94,21 @@ esp_err_t settings_save(const app_settings_t *s)
         err = nvs_commit(h);
     }
     nvs_close(h);
-    ESP_RETURN_ON_ERROR(err, TAG, "write");
+    return err;
+}
+
+esp_err_t settings_save(const app_settings_t *s)
+{
+    ESP_RETURN_ON_FALSE(valid(s), ESP_ERR_INVALID_ARG, TAG, "ajustes fuera de rango");
+    ESP_RETURN_ON_ERROR(write_nvs(s), TAG, "write");
 
     current = *s;
     return ESP_OK;
 }
+
+#if CONFIG_APP_BENCH
+esp_err_t settings_save_unchecked(const app_settings_t *s)
+{
+    return write_nvs(s);
+}
+#endif

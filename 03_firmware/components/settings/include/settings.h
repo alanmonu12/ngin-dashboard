@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "esp_err.h"
+#include "sdkconfig.h"
 
 #include "vehicle_types.h"
 
@@ -28,6 +29,12 @@ const app_settings_t *settings_get(void);
 
 /* Valida, guarda en NVS y actualiza la copia en RAM. */
 esp_err_t settings_save(const app_settings_t *s);
+
+#if CONFIG_APP_BENCH
+/* Solo en el build de banco: guarda sin validar ni actualizar la copia en RAM, para probar SW-703 al
+ * reiniciar. */
+esp_err_t settings_save_unchecked(const app_settings_t *s);
+#endif
 
 #ifdef __cplusplus
 }
