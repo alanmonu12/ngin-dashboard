@@ -10,7 +10,7 @@ verificación cita el PR (`PR #nn`), como pide `trace.py`.
 | Parte | Qué necesita | SW-xx |
 | --- | --- | --- |
 | A | El firmware de `main` tal cual, con el simulador | SW-306, SW-505, SW-506, SW-507, SW-702, SW-901 |
-| B | Un build de banco con la consola `bench` (falta: ver "Build de banco") | SW-104, SW-108, SW-109, SW-302, SW-307, SW-501, SW-502, SW-503, SW-504, SW-701, SW-703, SW-706, SW-904, SW-906 |
+| B | El build de banco con la consola `bench` (ver "Build de banco") | SW-104, SW-108, SW-109, SW-302, SW-307, SW-501, SW-502, SW-503, SW-504, SW-701, SW-703, SW-706, SW-904, SW-906 |
 | C | Inspección o CI, registrada en el PR; sin tarjeta | SW-704, SW-902, SW-903, SW-907, SW-908, SW-909 |
 
 SW-303 sale de este guion: sus 150 ms incluyen la latencia OBD y solo se pueden medir con el simulador de ECU
@@ -70,30 +70,40 @@ se activa en cada marcha.
 3. **Pasa si** en cada cambio, dentro de esos 12 cuadros, los valores corresponden a lo que hace el simulador: ningún
    valor en 0 ni con el número de la última vez que se vio esa pantalla.
 
-## Build de banco (falta)
+## Build de banco
 
 Las pruebas de la parte B necesitan meter valores fijos, guardar ajustes y provocar fallas, cosas que el firmware
-de producción no permite. La propuesta es una opción de Kconfig `APP_BENCH` (apagada por defecto, nunca en el
-build del auto) que agrega una consola `bench` por el puerto serial:
+de producción no permite. El build de banco (opción `APP_BENCH`, apagada por defecto, nunca en el build del auto)
+agrega una consola `bench` por el puerto serial y **arranca con valores fijos de ralentí** (800 rpm, 0 km/h, MAP de
+32 kPa, barómetro de 78 kPa) en lugar del simulador, así el Boost_Pico parte de 0 en cada arranque.
+
+```bash
+cd 03_firmware
+idf.py -B build_bench -D SDKCONFIG=build_bench/sdkconfig -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.bench" build
+idf.py -B build_bench -p /dev/ttyUSB0 flash monitor
+```
 
 | Comando | Para qué |
 | --- | --- |
 | `bench fix rpm=<rpm> kmh=<km/h> map=<kPa> baro=<kPa>` | Reemplaza al simulador por muestras fijas cada 50 ms. Los campos omitidos quedan igual |
 | `bench live` | Regresa al simulador |
-| `bench z2h <ms>` | Fuerza el tiempo 0–100 mostrado |
-| `bench save unit <bar\|psi\|kpa>` | Guarda la Unidad_Presión con `settings_save` |
-| `bench save shift <marcha> <rpm>` | Guarda la RPM_Cambio de una marcha con `settings_save` e imprime el resultado |
-| `bench save bar_start <rpm>` | Guarda la RPM_Inicio_Barra con `settings_save` |
+| `bench z2h <ms>` · `bench z2h off` | Fuerza el tiempo 0–100 mostrado, o deja de forzarlo |
+| `bench save unit <bar\|psi\|kPa>` | Guarda la Unidad_Presión con `settings_save` e imprime `OK` o el error |
+| `bench save shift <marcha> <rpm>` | Guarda la RPM_Cambio de una marcha con `settings_save` e imprime `OK` o el error |
+| `bench save bar_start <rpm>` | Guarda la RPM_Inicio_Barra con `settings_save` e imprime `OK` o el error |
 | `bench settings` | Imprime los ajustes en uso |
-| `bench corrupt` | Escribe en NVS unos ajustes con una RPM_Cambio de 2900 rpm, sin validarlos |
+| `bench corrupt` | Escribe en NVS los ajustes actuales con una RPM_Cambio de 1.ª de 2900 rpm, sin validarlos |
+| `bench latency` | Latencia máxima y media de muestra a cuadro dibujado en las últimas 1000 actualizaciones |
+| `bench fail_source` | Reinicia y hace fallar el arranque de la fuente de datos una vez |
 | `bench panic` | Llama a `abort()` |
-| `bench latency` | Imprime, en las últimas 1000 actualizaciones, la latencia máxima de muestra a fin de envío por SPI |
 
-Y una opción `APP_BENCH_FAIL_SOURCE` con la que `data_source_start` regresa error. La unidad solo se lee al arrancar
-(`ui_start`): después de `bench save unit` hay que reiniciar, y eso de paso prueba SW-701.
+La unidad solo se lee al arrancar (`ui_start`): después de `bench save unit` hay que reiniciar, y eso de paso prueba
+SW-701.
 
-Con la consola, `read_log.py` no sirve para escribir comandos: usar `idf.py -p /dev/ttyUSB0 monitor` y guardar su
-salida.
+`bench latency` mide del instante de la muestra al fin del render del cuadro que la incluye; el último bloque puede
+tardar unos ms más en salir por SPI (a 80 MHz, un bloque de 40 líneas tarda unos 4 ms).
+
+Con la consola, `read_log.py` no sirve para escribir comandos: usar `idf.py monitor` y guardar su salida.
 
 ## Parte B: build de banco
 
@@ -107,7 +117,7 @@ Valores comunes: barómetro de 78 kPa, Ajustes_Por_Defecto (RPM_Cambio 6000 rpm,
 
 ### SW-108 Boost_Pico con la Resolución_Unidad
 
-1. Reiniciar, `bench fix map=190 baro=78`, esperar 1 s y luego `bench fix map=150` (0.72 bar).
+1. Reiniciar (el pico parte de 0), `bench fix map=190 baro=78`, esperar 1 s y luego `bench fix map=150` (0.72 bar).
 2. Repetir en las tres unidades.
 3. **Pasa si** el valor baja a `0.72`, `10.4` y `72`, y "Pico" sigue en `1.12`, `16.2` y `112`.
 
@@ -174,13 +184,14 @@ Con RPM_Inicio_Barra de 2500 y RPM_Cambio de 6000, los LED encendidos son la par
 
 ### SW-906 Backtrace antes de reiniciar por un panic
 
-1. `bench panic` con `read_log.py --save` en otra sesión del puerto (cerrar `monitor` antes).
-2. **Pasa si** el log tiene el backtrace decodificado con `bench_panic` (o la función que llame a `abort()`) y
-   la tarjeta reinicia sola hasta la pantalla de boost.
+1. En `idf.py -B build_bench monitor`, `bench panic`, guardando la salida. `monitor` decodifica el backtrace con
+   el `.elf` de `build_bench`; `read_log.py` usa el de `build` y aquí no sirve.
+2. **Pasa si** la salida tiene el backtrace decodificado con `abort` llamado desde `bench_cmd`, y la tarjeta
+   reinicia sola hasta la pantalla de boost.
 
 ### SW-904 Aviso_Sin_Datos si la fuente no inicia
 
-1. Build con `APP_BENCH_FAIL_SOURCE`.
+1. `bench fail_source`: la tarjeta reinicia y la fuente falla al arrancar.
 2. **Pasa si** se ve la pantalla de boost con `Sin datos` en rojo arriba a la derecha y el log dice
    `no se pudo iniciar la fuente de datos`.
 
