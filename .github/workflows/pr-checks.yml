@@ -115,9 +115,11 @@ jobs:
           target: esp32
           path: 03_firmware
           # ccache guarda en el workspace (montado en el contenedor) para que actions/cache lo conserve.
+          # COMPILERCHECK=content: IDF genera en build/ el archivo de -specs= en cada build y, con el
+          # default (mtime), su fecha entra al hash y ningún objeto se reutiliza entre corridas.
           # El reporte va a un archivo: GITHUB_STEP_SUMMARY no existe dentro del contenedor.
           command: >-
-            export CCACHE_DIR="$PWD/../.ccache" CCACHE_MAXSIZE=500M &&
+            export CCACHE_DIR="$PWD/../.ccache" CCACHE_MAXSIZE=500M CCACHE_COMPILERCHECK=content &&
             ccache -z &&
             idf.py --ccache build &&
             ccache -s &&
