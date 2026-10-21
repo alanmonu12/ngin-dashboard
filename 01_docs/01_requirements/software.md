@@ -89,7 +89,20 @@ Parámetros provisionales (`vehicle.h`):
 
 ## SW-3xx Shift light
 
-_Pendiente: issue #5._
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-301 | El firmware debe calcular la fracción encendida de la Barra_RPM como (RPM − RPM_Inicio_Barra) / (RPM_Cambio − RPM_Inicio_Barra), acotada entre 0 y 1, con la RPM_Cambio de la Marcha_Engranada. | SYS-18 | vehicle_logic | Prueba en host: con RPM_Inicio_Barra de 2500 y RPM_Cambio de 6000, 4250 rpm dan 0.5 ± 0.001, 2000 rpm dan 0 y 7000 rpm dan 1. | Verificado | La lógica entrega una fracción y la UI la convierte en LEDs: así se prueba en host sin LVGL. |
+| SW-302 | El firmware debe encender en la Barra_RPM una cantidad de LED_Simulado igual a la parte entera de 15 por la fracción encendida de la Barra_RPM. | SYS-18 | ui | Demostración en la tarjeta (falta): barrer RPM con el simulador y contar los LED_Simulado encendidos con el criterio de SYS-18. | Implementado | 15 LED_Simulado: 6 verdes, 5 amarillos y 4 rojos (glosario, Barra_RPM). |
+| SW-303 | Cuando las RPM del motor alcanzan la RPM_Cambio de la Marcha_Engranada, el firmware debe activar la Alarma_Cambio en menor o igual a 150 ms. | SYS-05 | vehicle_logic | Prueba en host: con RPM estables y RPM_Cambio de 6000, 5990 rpm no activan la alarma y 6000 rpm sí; 5800 rpm la activan en 1.ª (RPM_Cambio 5500) y no en 2.ª (6000). Prueba en banco de los 150 ms (falta): simulador CAN. | Implementado | `vehicle_logic` decide en la misma muestra; los 150 ms incluyen la latencia OBD y el dibujo, por eso solo se verifican en banco. |
+| SW-304 | Mientras la Tasa_RPM es mayor que 0 rpm/s, el firmware debe activar la Alarma_Cambio cuando las RPM del motor alcanzan la RPM_Cambio de la Marcha_Engranada menos la Tasa_RPM por 75 ms. | derivado | vehicle_logic | Prueba en host, con la latencia configurada en 100 ms: subiendo a 3000 rpm/s, 5750 rpm ya activan la alarma con RPM_Cambio de 6000; bajando de 6500 a 5900 rpm no la activan. | Verificado | Compensación de latencia: cada RPM llega por OBD con 50–100 ms de retraso. 75 ms es la mitad de ese rango, provisional hasta medir la latencia con los logs de OBD. Bajando no se adelanta. Tasa_RPM con suavizado exponencial, α = 0.3, también provisional. |
+| SW-305 | Si la Marcha_Engranada es nula, el firmware debe usar la menor RPM_Cambio configurada como RPM_Cambio. | derivado | vehicle_logic | Prueba en host (falta test): con marcha nula, RPM_Cambio de 5500 en 1.ª y de 6000 en las demás, 5500 rpm activan la alarma. | Implementado | Con clutch pisado o en neutral no hay marcha: avisar de más es más seguro que no avisar. |
+| SW-306 | Mientras la Alarma_Cambio está activa, el firmware debe alternar los 15 LED_Simulado entre rojo y apagado con una frecuencia entre 4 Hz y 8 Hz. | SYS-05 | ui | Demostración en la tarjeta (falta): video a 60 cuadros/s o más; contar los ciclos en 2 s. | Implementado | Frecuencia de la Alarma_Cambio (glosario). La UI usa 6 Hz (medio periodo de 83 ms), muestreado cada 33 ms. |
+| SW-307 | El firmware debe rechazar cada RPM_Cambio menor que 3000 rpm, mayor que 9000 rpm o que no sea múltiplo de 100 rpm. | SYS-06 | settings | Inspección de `valid()` en `settings.c`. Prueba (falta test): `settings` usa NVS y no compila en host. | Implementado | Rango y paso de SYS-06, TBD según el limitador del 1.6 T-GDI (Q14). Falta la pantalla de ajustes que permita cambiarlas (SW-5xx). |
+
+Se verifica en host la lógica (SW-301, SW-303 sin el tiempo, SW-304 y SW-305); solo en la tarjeta, el dibujo
+(SW-302, SW-306) y los 150 ms de SW-303. La frecuencia de SYS-04 (15 Hz) depende del ritmo del PID 0x0C (SW-6xx).
+
+Sin SYS: la pantalla de RPM redondea a 10 rpm y muestra la velocidad en km/h.
 
 ## SW-4xx Cronómetro 0–100
 
@@ -99,6 +112,6 @@ _Pendiente: issue #6._
 
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
 | --- | --- | --- | --- | --- | --- | --- |
-| SW-501 | Cuando cambia un valor que muestra la pantalla activa, el firmware debe dibujar el valor nuevo en menor o igual a 50 ms. | SYS-03, SYS-14 | ui | Demostración en la tarjeta (falta): registrar el instante de cada muestra y el del envío del cuadro por SPI; pasa si la diferencia es menor o igual a 50 ms en 1000 cambios. | Implementado | La UI refresca cada 33 ms (unos 30 Hz) y redibuja solo lo que cambió. Con este límite, la frecuencia que ve el usuario la fija el ritmo de las respuestas OBD (SW-6xx). 50 ms es provisional: falta medir el render en la tarjeta. |
+| SW-501 | Cuando cambia un valor que muestra la pantalla activa, el firmware debe dibujar el valor nuevo en menor o igual a 50 ms. | SYS-03, SYS-04, SYS-14 | ui | Demostración en la tarjeta (falta): registrar el instante de cada muestra y el del envío del cuadro por SPI; pasa si la diferencia es menor o igual a 50 ms en 1000 cambios. | Implementado | La UI refresca cada 33 ms (unos 30 Hz) y redibuja solo lo que cambió. Con este límite, la frecuencia que ve el usuario la fija el ritmo de las respuestas OBD (SW-6xx). 50 ms es provisional: falta medir el render en la tarjeta. |
 
 _El resto (navegación, pantalla de ajustes): pendiente._

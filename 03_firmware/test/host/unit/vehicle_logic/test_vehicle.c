@@ -37,6 +37,7 @@ TEST(vehicle, boost_uses_last_baro_and_tracks_peak)
     TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.00f, v.out.boost_peak_bar);
 }
 
+/* Verifica: SW-303 */
 TEST(vehicle, shift_rpm_follows_the_gear)
 {
     /* 1.ª cambia a 5500, 2.ª a 6000: 5800 rpm alarma en 1.ª pero no en 2.ª */

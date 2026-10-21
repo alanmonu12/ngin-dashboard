@@ -18,6 +18,7 @@ TEST_SETUP(shift)
 
 TEST_TEAR_DOWN(shift) {}
 
+/* Verifica: SW-301 */
 TEST(shift, bar_is_proportional)
 {
     /* SYS-18: barra de RPM_Inicio_Barra a RPM_Cambio */
@@ -29,6 +30,7 @@ TEST(shift, bar_is_proportional)
     TEST_ASSERT_EQUAL_FLOAT(1.0f, o.bar_fraction);
 }
 
+/* Verifica: SW-303 */
 TEST(shift, alarm_at_shift_rpm_when_steady)
 {
     vehicle_shift_out_t o = vehicle_shift_update(&s, &cfg, 0, 5990.0f, 2500.0f, 6000.0f);
@@ -39,6 +41,7 @@ TEST(shift, alarm_at_shift_rpm_when_steady)
     TEST_ASSERT_TRUE(o.alarm);
 }
 
+/* Verifica: SW-304 */
 TEST(shift, alarm_leads_when_rpm_rises_fast)
 {
     /* 3000 rpm/s × 0.1 s = 300 rpm de adelanto: a 5750 ya avisa */
@@ -47,6 +50,7 @@ TEST(shift, alarm_leads_when_rpm_rises_fast)
     TEST_ASSERT_TRUE(o.alarm);
 }
 
+/* Verifica: SW-304 */
 TEST(shift, no_lead_when_rpm_falls)
 {
     vehicle_shift_update(&s, &cfg, 0, 6500.0f, 2500.0f, 6000.0f);
