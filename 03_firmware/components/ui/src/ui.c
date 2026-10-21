@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "esp_check.h"
+#include "esp_log.h"
 #include "lvgl.h"
 
 #include "bsp.h"
@@ -11,9 +12,12 @@
 
 static const char *TAG = "ui";
 
-#define LOCK_TIMEOUT_MS         1000
-#define REFRESH_MS              33  /* ~30 Hz */
-#define BLINK_HALF_MS           83  /* Alarma_Cambio a 6 Hz (4–8 Hz en el glosario) */
+#define LOCK_TIMEOUT_MS 1000
+#define REFRESH_MS      20 /* 50 Hz: la espera a la copia más el dibujo cabe en los 50 ms de SW-501 */
+/* Alarma_Cambio a 4.2 Hz (4–8 Hz en el glosario), múltiplo del refresco. Más lento deja ver menos el tearing:
+ * el panel no expone su señal TE a ningún GPIO (probado 2026-10-21) y no se puede sincronizar con su barrido.
+ */
+#define BLINK_HALF_MS           120
 #define BOOST_ARC_STEPS_PER_BAR 100 /* el arco avanza en centésimas de bar */
 #define BOOST_ARC_MAX           150 /* escala de 0 a 1.5 bar */
 #define SCREEN_ANIM_MS          150
@@ -43,7 +47,7 @@ static struct {
     int active;
     lv_obj_t *error_label;
 
-    lv_obj_t *boost_arc, *boost_value, *boost_peak;
+    lv_obj_t *boost_arc, *boost_value, *boost_unit, *boost_peak;
     lv_obj_t *led_row;
     lv_obj_t *leds[LED_COUNT];
     lv_color_t led_on[LED_COUNT], led_off[LED_COUNT];
@@ -55,6 +59,11 @@ static struct {
     lv_color_t last_led_color[LED_COUNT];
     bool led_cache_valid;
     vehicle_z2h_state_t last_z2h_state;
+#if CONFIG_APP_BENCH
+    /* Build de banco: tiempos del último cambio de pantalla (SW-505 a SW-507), medidos desde el gesto. */
+    uint32_t switch_tick;
+    bool switch_values_pending, switch_loading;
+#endif
 } ui;
 
 static int decimal_scale(int decimals)
@@ -120,8 +129,8 @@ static void build_boost(lv_obj_t *scr)
 
     ui.boost_value = make_label(scr, &lv_font_montserrat_48, COLOR_TEXT, "0.00");
     lv_obj_align(ui.boost_value, LV_ALIGN_CENTER, 0, 10);
-    lv_obj_align(make_label(scr, &lv_font_montserrat_20, COLOR_QUIET, vehicle_unit_name(ui.cfg.unit)),
-                 LV_ALIGN_CENTER, 0, 54);
+    ui.boost_unit = make_label(scr, &lv_font_montserrat_20, COLOR_QUIET, vehicle_unit_name(ui.cfg.unit));
+    lv_obj_align(ui.boost_unit, LV_ALIGN_CENTER, 0, 54);
 
     ui.boost_peak = make_label(scr, &lv_font_montserrat_20, COLOR_QUIET, "Pico 0.00");
     lv_obj_align(ui.boost_peak, LV_ALIGN_BOTTOM_MID, 0, -12);
@@ -227,14 +236,15 @@ static void refresh_rpm(const vehicle_outputs_t *o)
         }
     }
 
-    /* SYS-18: LEDs encendidos en proporción a las RPM; SYS-05: al cambio parpadean todos en rojo */
+    /* SYS-18: LEDs encendidos en proporción a las RPM; SYS-05: al cambio parpadean los 15, cada uno en su
+     * color. Solo cambia el brillo, no el color: el tearing (el panel no expone TE) se nota menos. */
     int lit = (int)(o->bar_fraction * LED_COUNT);
     bool blink_on = (lv_tick_get() / BLINK_HALF_MS) % 2 == 0;
     lv_color_t want[LED_COUNT];
     int changed = 0;
     for (int i = 0; i < LED_COUNT; i++) {
         if (o->shift_alarm) {
-            want[i] = blink_on ? COLOR_RED : ui.led_off[i];
+            want[i] = blink_on ? ui.led_on[i] : ui.led_off[i];
         } else {
             want[i] = i < lit ? ui.led_on[i] : ui.led_off[i];
         }
@@ -290,6 +300,15 @@ static void refresh_cb(lv_timer_t *t)
         refresh_z2h(&o);
         break;
     }
+    /* SW-501: dibujar en este mismo ciclo. El temporizador de refresco de LVGL no está sincronizado con este
+     * y, si se le espera, suma hasta un periodo más de latencia (se midió 76 ms en el build de banco). */
+    lv_refr_now(NULL);
+#if CONFIG_APP_BENCH
+    if (ui.switch_values_pending) {
+        ui.switch_values_pending = false;
+        ESP_LOGI(TAG, "valores en la pantalla nueva: %lu ms", (unsigned long)lv_tick_elaps(ui.switch_tick));
+    }
+#endif
 }
 
 static void invalidate_cache(void)
@@ -300,11 +319,13 @@ static void invalidate_cache(void)
     ui.last_z2h_state = (vehicle_z2h_state_t)-1;
 }
 
-/* SYS-19: deslizar cambia de pantalla. */
-static void gesture_cb(lv_event_t *e)
+#if CONFIG_APP_BENCH
+static void screen_loaded_cb(lv_event_t *e);
+#endif
+
+/* Siguiente pantalla del Ciclo_Pantallas con dir = LV_DIR_LEFT, anterior con LV_DIR_RIGHT. */
+static void show_next_screen(lv_dir_t dir)
 {
-    (void)e;
-    lv_dir_t dir = lv_indev_get_gesture_dir(lv_indev_active());
     int next;
     lv_screen_load_anim_t anim;
     if (dir == LV_DIR_LEFT) {
@@ -318,7 +339,19 @@ static void gesture_cb(lv_event_t *e)
     }
     ui.active = next;
     invalidate_cache();
+#if CONFIG_APP_BENCH
+    ui.switch_tick = lv_tick_get();
+    ui.switch_values_pending = true;
+    ui.switch_loading = true;
+#endif
     lv_screen_load_anim(ui.screens[next], anim, SCREEN_ANIM_MS, 0, false);
+}
+
+/* SYS-19: deslizar cambia de pantalla. */
+static void gesture_cb(lv_event_t *e)
+{
+    (void)e;
+    show_next_screen(lv_indev_get_gesture_dir(lv_indev_active()));
 }
 
 void ui_show_splash(void)
@@ -355,6 +388,9 @@ esp_err_t ui_start(const ui_config_t *cfg)
     for (int i = 0; i < SCREEN_COUNT; i++) {
         ui.screens[i] = make_screen();
         lv_obj_add_event_cb(ui.screens[i], gesture_cb, LV_EVENT_GESTURE, NULL);
+#if CONFIG_APP_BENCH
+        lv_obj_add_event_cb(ui.screens[i], screen_loaded_cb, LV_EVENT_SCREEN_LOADED, NULL);
+#endif
     }
     build_boost(ui.screens[SCREEN_BOOST]);
     build_rpm(ui.screens[SCREEN_RPM]);
@@ -369,3 +405,73 @@ esp_err_t ui_start(const ui_config_t *cfg)
     bsp_display_unlock();
     return ESP_OK;
 }
+
+#if CONFIG_APP_BENCH
+static void screen_loaded_cb(lv_event_t *e)
+{
+    (void)e;
+    /* La carga de la primera pantalla en ui_start no viene de un gesto: no se mide. */
+    if (!ui.switch_loading) {
+        return;
+    }
+    ui.switch_loading = false;
+    ESP_LOGI(TAG, "cambio de pantalla: %lu ms", (unsigned long)lv_tick_elaps(ui.switch_tick));
+}
+
+static const char *label_text(const lv_obj_t *label)
+{
+    return label ? lv_label_get_text(label) : "";
+}
+
+/* Una letra por LED_Simulado: G, Y o R según su color encendido; '.' si está apagado. */
+static int led_pattern(char *out)
+{
+    int lit = 0;
+    for (int i = 0; i < LED_COUNT; i++) {
+        lv_color_t c = lv_obj_get_style_bg_color(ui.leds[i], LV_PART_MAIN);
+        if (lv_color_eq(c, ui.led_off[i])) {
+            out[i] = '.';
+            continue;
+        }
+        lit++;
+        out[i] = lv_color_eq(c, COLOR_GREEN) ? 'G' : (lv_color_eq(c, COLOR_YELLOW) ? 'Y' : 'R');
+    }
+    out[LED_COUNT] = '\0';
+    return lit;
+}
+
+static void print_screen(void)
+{
+    switch (ui.active) {
+    case SCREEN_BOOST:
+        printf("pantalla=boost valor=\"%s\" unidad=\"%s\" pico=\"%s\" arco=%d/%d\n",
+               label_text(ui.boost_value), label_text(ui.boost_unit), label_text(ui.boost_peak),
+               (int)lv_arc_get_value(ui.boost_arc), BOOST_ARC_MAX);
+        break;
+    case SCREEN_RPM: {
+        char leds[LED_COUNT + 1];
+        int lit = led_pattern(leds);
+        printf("pantalla=rpm marcha=\"%s\" rpm=\"%s\" velocidad=\"%s\" leds=%s encendidos=%d\n",
+               label_text(ui.rpm_gear), label_text(ui.rpm_value), label_text(ui.rpm_speed), leds, lit);
+        break;
+    }
+    case SCREEN_Z2H:
+        printf("pantalla=0-100 tiempo=\"%s\" estado=\"%s\"\n", label_text(ui.z2h_time),
+               label_text(ui.z2h_state));
+        break;
+    }
+    printf("aviso=\"%s\"\n", label_text(ui.error_label));
+}
+
+esp_err_t ui_bench_screen(int dir)
+{
+    ESP_RETURN_ON_FALSE(bsp_display_lock(LOCK_TIMEOUT_MS), ESP_ERR_TIMEOUT, TAG, "lock");
+    if (dir != 0) {
+        show_next_screen(dir > 0 ? LV_DIR_LEFT : LV_DIR_RIGHT);
+    } else {
+        print_screen();
+    }
+    bsp_display_unlock();
+    return ESP_OK;
+}
+#endif

@@ -1,5 +1,6 @@
 # ESP-IDF
 03_firmware/**/build/
+03_firmware/build_bench/
 03_firmware/**/managed_components/
 03_firmware/**/.cache/
 03_firmware/**/sdkconfig.old

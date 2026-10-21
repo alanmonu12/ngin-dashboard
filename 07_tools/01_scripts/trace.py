@@ -10,7 +10,8 @@ GITHUB_STEP_SUMMARY, la agrega al resumen del job de GitHub Actions. Sale con 1 
 - un SW-xx Verificado sin test ni prueba en la tarjeta registrada (`PR #nn` en su verificación), o uno
   Implementado sin test en un componente que se prueba en host;
 - un HW-xx Verificado sin la prueba o el análisis registrado en un PR (`PR #nn` en su verificación);
-- una fila mal formada: ID repetido, estado desconocido o traza que no es SYS-xx ni `derivado`.
+- una fila mal formada: ID repetido, estado desconocido, traza que no es SYS-xx ni `derivado`, o una fila separada de
+  su tabla por una línea en blanco (Markdown ya no la muestra como tabla).
 
 Los SYS-xx viven en el documento vivo; un SYS-xx que no tiene SW-xx ni HW-xx se lista como aviso, sin error.
 
@@ -59,11 +60,16 @@ def read_requirements(path: Path, errors: list[str], prefix: str = "SW") -> dict
     # Solo las filas de requisitos: la tabla de rangos (SW-1xx) no empieza con tres dígitos.
     row = re.compile(rf"^\|\s*{prefix}-\d{{3}}\s*\|")
     reqs: dict[str, Requirement] = {}
+    prev = ""
     for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        prev, is_first = line, not prev.startswith("|")
         if not row.match(line):
             continue
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         where = f"{path.name}:{n}"
+        # Sin la línea anterior de tabla (encabezado u otra fila), Markdown la muestra como texto, no como tabla.
+        if is_first:
+            errors.append(f"{where}: fila fuera de su tabla (¿una línea en blanco antes?)")
         if len(cells) != len(COLUMNS):
             errors.append(f"{where}: {len(cells)} columnas en lugar de {len(COLUMNS)} (¿un `|` dentro de una celda?)")
             continue
