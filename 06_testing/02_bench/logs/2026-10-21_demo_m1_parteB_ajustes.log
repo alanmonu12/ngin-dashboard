@@ -1,0 +1,1082 @@
+### s1
+[   0.000] >>> reset
+[   0.154] ets Jun  8 2016 00:22:�ets Jun  8 2016 00:22:57
+[   0.154] 
+[   0.154] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.154] configsip: 0, SPIWP:0xee
+[   0.154] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.154] mode:DIO, clock div:2
+[   0.154] load:0x3fff0040,len:6272
+[   0.154] load:0x40078000,len:15824
+[   0.154] load:0x40080400,len:3988
+[   0.154] entry 0x40080644
+[   0.204] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.204] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.204] I (27) boot: Multicore bootloader
+[   0.204] I (28) boot: chip revision: v1.0
+[   0.204] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.204] I (35) boot.esp32: SPI Mode       : DIO
+[   0.204] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.204] I (42) boot: Enabling RNG early entropy source...
+[   0.204] I (46) boot: Partition Table:
+[   0.204] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.204] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.204] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.204] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.204] I (75) boot: End of partition table
+[   0.204] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.305] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.305] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.355] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.507] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.557] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.557] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.557] I (406) boot: Disabling RNG early entropy source...
+[   0.558] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.558] I (418) esp_psram: Found 8MB PSRAM device
+[   0.558] I (418) esp_psram: Speed: 40MHz
+[   0.558] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.558] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.558] I (433) cpu_start: Multicore app
+[   1.412] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.463] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.463] I (1298) cpu_start: Pro cpu start user code
+[   1.463] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.463] I (1300) app_init: Application information:
+[   1.463] I (1304) app_init: Project name:     esp32_dashboard
+[   1.463] I (1309) app_init: App version:      88e8989
+[   1.463] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.463] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.463] I (1322) app_init: ESP-IDF:          v6.1
+[   1.463] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.513] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.513] I (1334) efuse_init: Chip rev:         v1.0
+[   1.513] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.513] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.513] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.513] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.513] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.513] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.564] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.564] I (1379) spi_flash: detected chip: generic
+[   1.564] I (1382) spi_flash: flash io: dio
+[   1.564] I (1386) main_task: Started on CPU0
+[   1.564] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.564] I (1396) main_task: Calling app_main()
+[   1.564] I (1417) settings: sin ajustes guardados; valores por defecto
+[   1.564] I (1419) st7796: version: 1.5.0
+[   1.564] I (1420) st7796_general: LCD panel create success, version: 1.5.0
+[   1.765] I (1652) LVGL: Starting LVGL task
+[   2.570] [5n
+[   2.570] Type 'help' to get the list of commands.
+[   2.570] Use UP/DOWN arrows to navigate through command history.
+[   2.570] Press TAB when typing command name to auto-complete.
+[   2.570] 
+[   2.570] Your terminal application does not support escape sequences.
+[   2.570] 
+[   2.570] Line editing and history features are disabled.
+[   2.570] 
+[   2.570] On Windows, try using Windows Terminal or Putty instead.
+[   2.570] bench> W (2407) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.570] I (2436) sim: simulador iniciado
+[   2.570] I (2437) app: fuente de datos: banco
+[   2.570] I (2438) main_task: Returned from app_main()
+[   6.143] >>> bench settings
+[   6.193] bench settings
+[   6.193] unidad=bar bar_start=2500 shift=6000,6000,6000,6000,6000,6000
+[   6.193] bench> 
+### s2
+[   0.000] >>> bench save unit psi
+[   0.050] ets Jun  8 2016 00:22:57
+[   0.050] 
+[   0.050] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.050] configsip: 0, SPIWP:0xee
+[   0.050] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.050] mode:DIO, clock div:2
+[   0.050] load:0x3fff0040,len:6272
+[   0.050] load:0x40078000,len:15824
+[   0.050] load:0x40080400,len:3988
+[   0.050] entry 0x40080644
+[   0.100] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.100] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.100] I (27) boot: Multicore bootloader
+[   0.100] I (28) boot: chip revision: v1.0
+[   0.100] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.100] I (35) boot.esp32: SPI Mode       : DIO
+[   0.101] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.101] I (42) boot: Enabling RNG early entropy source...
+[   0.101] I (46) boot: Partition Table:
+[   0.101] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.101] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.101] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.101] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.101] I (75) boot: End of partition table
+[   0.101] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.201] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.201] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.251] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.402] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.452] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.452] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.452] I (406) boot: Disabling RNG early entropy source...
+[   0.452] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.452] I (418) esp_psram: Found 8MB PSRAM device
+[   0.452] I (418) esp_psram: Speed: 40MHz
+[   0.452] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.452] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.452] I (433) cpu_start: Multicore app
+[   1.306] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.356] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.356] I (1298) cpu_start: Pro cpu start user code
+[   1.356] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.356] I (1300) app_init: Application information:
+[   1.356] I (1304) app_init: Project name:     esp32_dashboard
+[   1.356] I (1309) app_init: App version:      88e8989
+[   1.356] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.356] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.356] I (1322) app_init: ESP-IDF:          v6.1
+[   1.356] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.407] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.407] I (1334) efuse_init: Chip rev:         v1.0
+[   1.407] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.407] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.407] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.407] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.407] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.407] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.457] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.457] I (1379) spi_flash: detected chip: generic
+[   1.457] I (1382) spi_flash: flash io: dio
+[   1.457] I (1386) main_task: Started on CPU0
+[   1.457] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.457] I (1396) main_task: Calling app_main()
+[   1.457] I (1417) settings: sin ajustes guardados; valores por defecto
+[   1.457] I (1419) st7796: version: 1.5.0
+[   1.457] I (1420) st7796_general: LCD panel create success, version: 1.5.0
+[   1.658] I (1652) LVGL: Starting LVGL task
+[   2.009] >>> bench save shift 1 5500
+[   2.462] [5n
+[   2.462] Type 'help' to get the list of commands.
+[   2.462] Use UP/DOWN arrows to navigate through command history.
+[   2.462] Press TAB when typing command name to auto-complete.
+[   2.462] 
+[   2.462] Your terminal application does not support escape sequences.
+[   2.462] 
+[   2.462] Line editing and history features are disabled.
+[   2.462] 
+[   2.462] On Windows, try using Windows Terminal or Putty instead.
+[   2.462] bench> W (2407) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.462] I (2436) sim: simulador iniciado
+[   2.462] I (2437) app: fuente de datos: banco
+[   2.462] I (2438) main_task: Returned from app_main()
+[   4.018] >>> bench save bar_start 2000
+[   4.069] bench save bar_start 2000
+[   4.069] OK
+[   4.069] bench> 
+[   6.028] >>> bench save shift 2 2900
+[   6.078] bench> bench save shift 2 2900
+[   6.078] E (6032) settings: settings_save(102): ajustes fuera de rango
+[   6.078] ESP_ERR_INVALID_ARG
+[   6.078] Command returned non-zero error code: 0x1 (ERROR)
+[   6.078] bench> 
+[   8.037] >>> bench save shift 2 9100
+[   8.087] bench> bench save shift 2 9100
+[   8.087] E (8041) settings: settings_save(102): ajustes fuera de rango
+[   8.087] ESP_ERR_INVALID_ARG
+[   8.087] Command returned non-zero error code: 0x1 (ERROR)
+[   8.087] bench> 
+[  10.047] >>> bench save shift 2 5550
+[  10.098] bench> bench save shift 2 5550
+[  10.098] E (10051) settings: settings_save(102): ajustes fuera de rango
+[  10.098] ESP_ERR_INVALID_ARG
+[  10.098] Command returned non-zero error code: 0x1 (ERROR)
+[  10.098] bench> 
+[  12.061] >>> bench settings
+[  12.111] bench> bench settings
+[  12.111] unidad=bar bar_start=2000 shift=6000,6000,6000,6000,6000,6000
+[  12.111] bench> 
+[  14.071] >>> reset
+[  14.224] bench> ets Jun  8 2016 00:22:57
+[  14.224] 
+[  14.224] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[  14.224] configsip: 0, SPIWP:0xee
+[  14.224] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[  14.224] mode:DIO, clock div:2
+[  14.224] load:0x3fff0040,len:6272
+[  14.224] load:0x40078000,len:15824
+[  14.224] load:0x40080400,len:3988
+[  14.224] entry 0x40080644
+[  14.275] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[  14.275] I (27) boot: compile time Oct 21 2026 01:48:19
+[  14.275] I (27) boot: Multicore bootloader
+[  14.275] I (28) boot: chip revision: v1.0
+[  14.275] I (31) boot.esp32: SPI Speed      : 40MHz
+[  14.275] I (35) boot.esp32: SPI Mode       : DIO
+[  14.275] I (38) boot.esp32: SPI Flash Size : 4MB
+[  14.275] I (42) boot: Enabling RNG early entropy source...
+[  14.275] I (46) boot: Partition Table:
+[  14.275] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[  14.275] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[  14.275] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[  14.275] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[  14.275] I (75) boot: End of partition table
+[  14.275] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[  14.375] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[  14.375] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[  14.426] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[  14.577] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[  14.627] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[  14.627] I (406) boot: Loaded app from partition at offset 0x10000
+[  14.627] I (406) boot: Disabling RNG early entropy source...
+[  14.627] I (417) quad_psram: This chip is ESP32-D0WD
+[  14.627] I (418) esp_psram: Found 8MB PSRAM device
+[  14.627] I (418) esp_psram: Speed: 40MHz
+[  14.627] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[  14.627] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[  14.627] I (433) cpu_start: Multicore app
+[  15.481] I (1290) esp_psram: SPI SRAM memory test OK
+[  15.531] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[  15.531] I (1298) cpu_start: Pro cpu start user code
+[  15.531] I (1298) cpu_start: cpu freq: 240000000 Hz
+[  15.531] I (1300) app_init: Application information:
+[  15.531] I (1304) app_init: Project name:     esp32_dashboard
+[  15.531] I (1309) app_init: App version:      88e8989
+[  15.531] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[  15.531] I (1318) app_init: ELF file SHA256:  6da41b690...
+[  15.531] I (1322) app_init: ESP-IDF:          v6.1
+[  15.531] I (1326) efuse_init: Min chip rev:     v0.0
+[  15.582] I (1330) efuse_init: Max chip rev:     v3.99 
+[  15.582] I (1334) efuse_init: Chip rev:         v1.0
+[  15.582] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[  15.582] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[  15.582] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[  15.582] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[  15.582] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[  15.582] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[  15.632] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[  15.632] I (1379) spi_flash: detected chip: generic
+[  15.632] I (1382) spi_flash: flash io: dio
+[  15.632] I (1386) main_task: Started on CPU0
+[  15.632] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[  15.632] I (1396) main_task: Calling app_main()
+[  15.632] I (1420) st7796: version: 1.5.0
+[  15.632] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[  15.833] I (1653) LVGL: Starting LVGL task
+[  16.637] [5n
+[  16.637] Type 'help' to get the list of commands.
+[  16.637] Use UP/DOWN arrows to navigate through command history.
+[  16.637] Press TAB when typing command name to auto-complete.
+[  16.637] 
+[  16.637] Your terminal application does not support escape sequences.
+[  16.637] 
+[  16.637] Line editing and history features are disabled.
+[  16.637] 
+[  16.637] On Windows, try using Windows Terminal or Putty instead.
+[  16.637] bench> W (2408) bench: build de banco: consola bench activa, fuente con valores fijos
+[  16.637] I (2437) sim: simulador iniciado
+[  16.637] I (2438) app: fuente de datos: banco
+[  16.637] I (2439) main_task: Returned from app_main()
+[  19.199] >>> bench settings
+[  19.249] bench settings
+[  19.250] unidad=bar bar_start=2000 shift=6000,6000,6000,6000,6000,6000
+[  19.250] bench> 
+[  21.211] >>> bench save shift 2 3000
+[  21.261] bench> bench save shift 2 3000
+[  21.261] OK
+[  21.261] bench> 
+[  23.224] >>> bench save shift 3 9000
+[  23.274] bench> bench save shift 3 9000
+[  23.274] OK
+[  23.274] bench> 
+[  25.234] >>> bench settings
+[  25.285] bench> bench settings
+[  25.285] unidad=bar bar_start=2000 shift=6000,3000,9000,6000,6000,6000
+[  25.285] bench> 
+### s4
+[   0.050] ets Jun  8 2016 00:22:57
+[   0.050] 
+[   0.051] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.051] configsip: 0, SPIWP:0xee
+[   0.051] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.051] mode:DIO, clock div:2
+[   0.051] load:0x3fff0040,len:6272
+[   0.051] load:0x40078000,len:15824
+[   0.051] load:0x40080400,len:3988
+[   0.051] entry 0x40080644
+[   0.101] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.101] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.101] I (27) boot: Multicore bootloader
+[   0.101] I (28) boot: chip revision: v1.0
+[   0.101] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.101] I (35) boot.esp32: SPI Mode       : DIO
+[   0.101] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.101] I (42) boot: Enabling RNG early entropy source...
+[   0.101] I (46) boot: Partition Table:
+[   0.101] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.101] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.101] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.101] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.101] I (75) boot: End of partition table
+[   0.101] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.202] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.202] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.252] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.404] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.454] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.454] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.454] I (406) boot: Disabling RNG early entropy source...
+[   0.454] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.454] I (418) esp_psram: Found 8MB PSRAM device
+[   0.454] I (418) esp_psram: Speed: 40MHz
+[   0.454] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.454] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.454] I (433) cpu_start: Multicore app
+[   1.309] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.359] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.359] I (1298) cpu_start: Pro cpu start user code
+[   1.359] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.359] I (1300) app_init: Application information:
+[   1.359] I (1304) app_init: Project name:     esp32_dashboard
+[   1.359] I (1309) app_init: App version:      88e8989
+[   1.359] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.359] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.359] I (1322) app_init: ESP-IDF:          v6.1
+[   1.359] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.409] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.409] I (1334) efuse_init: Chip rev:         v1.0
+[   1.409] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.409] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.409] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.409] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.409] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.409] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.460] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.460] I (1379) spi_flash: detected chip: generic
+[   1.460] I (1382) spi_flash: flash io: dio
+[   1.460] I (1386) main_task: Started on CPU0
+[   1.460] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.460] I (1396) main_task: Calling app_main()
+[   1.460] I (1420) st7796: version: 1.5.0
+[   1.460] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   1.662] I (1653) LVGL: Starting LVGL task
+[   2.466] [5n
+[   2.466] Type 'help' to get the list of commands.
+[   2.466] Use UP/DOWN arrows to navigate through command history.
+[   2.466] Press TAB when typing command name to auto-complete.
+[   2.466] 
+[   2.466] Your terminal application does not support escape sequences.
+[   2.466] 
+[   2.466] Line editing and history features are disabled.
+[   2.466] 
+[   2.466] On Windows, try using Windows Terminal or Putty instead.
+[   2.466] bench> W (2408) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.466] I (2437) sim: simulador iniciado
+[   2.466] I (2438) app: fuente de datos: banco
+[   2.466] I (2439) main_task: Returned from app_main()
+[   4.024] >>> bench save unit psi
+[   4.074] bench save unit psi
+[   4.074] OK
+[   4.074] bench> 
+[   6.037] >>> bench save shift 1 5500
+[   6.087] bench> bench save shift 1 5500
+[   6.087] OK
+[   6.087] bench> 
+[   8.048] >>> bench settings
+[   8.098] bench> bench settings
+[   8.098] unidad=psi bar_start=2000 shift=5500,3000,9000,6000,6000,6000
+[   8.098] bench> 
+[  10.060] >>> reset
+[  10.213] bench> ets Jun  8 2016 00:22:57
+[  10.213] 
+[  10.213] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[  10.214] configsip: 0, SPIWP:0xee
+[  10.214] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[  10.214] mode:DIO, clock div:2
+[  10.214] load:0x3fff0040,len:6272
+[  10.214] load:0x40078000,len:15824
+[  10.214] load:0x40080400,len:3988
+[  10.214] entry 0x40080644
+[  10.264] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[  10.264] I (27) boot: compile time Oct 21 2026 01:48:19
+[  10.264] I (27) boot: Multicore bootloader
+[  10.264] I (28) boot: chip revision: v1.0
+[  10.264] I (31) boot.esp32: SPI Speed      : 40MHz
+[  10.264] I (35) boot.esp32: SPI Mode       : DIO
+[  10.264] I (38) boot.esp32: SPI Flash Size : 4MB
+[  10.264] I (42) boot: Enabling RNG early entropy source...
+[  10.264] I (46) boot: Partition Table:
+[  10.264] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[  10.264] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[  10.264] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[  10.264] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[  10.264] I (75) boot: End of partition table
+[  10.264] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[  10.365] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[  10.365] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[  10.415] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[  10.566] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[  10.616] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[  10.616] I (406) boot: Loaded app from partition at offset 0x10000
+[  10.616] I (406) boot: Disabling RNG early entropy source...
+[  10.616] I (417) quad_psram: This chip is ESP32-D0WD
+[  10.616] I (418) esp_psram: Found 8MB PSRAM device
+[  10.616] I (418) esp_psram: Speed: 40MHz
+[  10.616] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[  10.616] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[  10.616] I (433) cpu_start: Multicore app
+[  11.469] I (1290) esp_psram: SPI SRAM memory test OK
+[  11.520] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[  11.520] I (1298) cpu_start: Pro cpu start user code
+[  11.520] I (1298) cpu_start: cpu freq: 240000000 Hz
+[  11.520] I (1300) app_init: Application information:
+[  11.520] I (1304) app_init: Project name:     esp32_dashboard
+[  11.520] I (1309) app_init: App version:      88e8989
+[  11.520] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[  11.520] I (1318) app_init: ELF file SHA256:  6da41b690...
+[  11.520] I (1322) app_init: ESP-IDF:          v6.1
+[  11.520] I (1326) efuse_init: Min chip rev:     v0.0
+[  11.570] I (1330) efuse_init: Max chip rev:     v3.99 
+[  11.570] I (1334) efuse_init: Chip rev:         v1.0
+[  11.570] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[  11.570] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[  11.570] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[  11.570] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[  11.570] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[  11.570] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[  11.621] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[  11.621] I (1379) spi_flash: detected chip: generic
+[  11.621] I (1382) spi_flash: flash io: dio
+[  11.621] I (1386) main_task: Started on CPU0
+[  11.621] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[  11.621] I (1396) main_task: Calling app_main()
+[  11.621] I (1420) st7796: version: 1.5.0
+[  11.621] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[  11.872] I (1653) LVGL: Starting LVGL task
+[  12.627] [5n
+[  12.627] Type 'help' to get the list of commands.
+[  12.627] Use UP/DOWN arrows to navigate through command history.
+[  12.627] Press TAB when typing command name to auto-complete.
+[  12.627] 
+[  12.627] Your terminal application does not support escape sequences.
+[  12.627] 
+[  12.627] Line editing and history features are disabled.
+[  12.627] 
+[  12.627] On Windows, try using Windows Terminal or Putty instead.
+[  12.627] bench> W (2408) bench: build de banco: consola bench activa, fuente con valores fijos
+[  12.627] I (2437) sim: simulador iniciado
+[  12.627] I (2438) app: fuente de datos: banco
+[  12.627] I (2439) main_task: Returned from app_main()
+[  15.190] >>> bench settings
+[  15.240] bench settings
+[  15.240] unidad=psi bar_start=2000 shift=5500,3000,9000,6000,6000,6000
+[  15.240] bench> 
+### s5
+[   0.050] ets Jun  8 2016 00:22:57
+[   0.050] 
+[   0.050] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.050] configsip: 0, SPIWP:0xee
+[   0.050] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.050] mode:DIO, clock div:2
+[   0.050] load:0x3fff0040,len:6272
+[   0.050] load:0x40078000,len:15824
+[   0.050] load:0x40080400,len:3988
+[   0.050] entry 0x40080644
+[   0.100] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.100] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.100] I (27) boot: Multicore bootloader
+[   0.100] I (28) boot: chip revision: v1.0
+[   0.100] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.100] I (35) boot.esp32: SPI Mode       : DIO
+[   0.100] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.100] I (42) boot: Enabling RNG early entropy source...
+[   0.100] I (46) boot: Partition Table:
+[   0.100] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.100] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.100] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.100] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.100] I (75) boot: End of partition table
+[   0.100] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.201] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.201] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.251] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.403] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.453] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.453] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.454] I (406) boot: Disabling RNG early entropy source...
+[   0.454] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.454] I (418) esp_psram: Found 8MB PSRAM device
+[   0.454] I (418) esp_psram: Speed: 40MHz
+[   0.454] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.454] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.454] I (433) cpu_start: Multicore app
+[   1.307] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.358] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.358] I (1298) cpu_start: Pro cpu start user code
+[   1.358] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.358] I (1300) app_init: Application information:
+[   1.358] I (1304) app_init: Project name:     esp32_dashboard
+[   1.358] I (1309) app_init: App version:      88e8989
+[   1.358] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.358] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.358] I (1322) app_init: ESP-IDF:          v6.1
+[   1.358] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.409] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.409] I (1334) efuse_init: Chip rev:         v1.0
+[   1.409] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.409] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.409] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.409] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.409] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.409] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.459] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.459] I (1379) spi_flash: detected chip: generic
+[   1.459] I (1382) spi_flash: flash io: dio
+[   1.459] I (1386) main_task: Started on CPU0
+[   1.459] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.459] I (1396) main_task: Calling app_main()
+[   1.459] I (1420) st7796: version: 1.5.0
+[   1.459] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   1.659] I (1653) LVGL: Starting LVGL task
+[   2.463] [5n
+[   2.463] Type 'help' to get the list of commands.
+[   2.463] Use UP/DOWN arrows to navigate through command history.
+[   2.463] Press TAB when typing command name to auto-complete.
+[   2.463] 
+[   2.463] Your terminal application does not support escape sequences.
+[   2.463] 
+[   2.463] Line editing and history features are disabled.
+[   2.463] 
+[   2.463] On Windows, try using Windows Terminal or Putty instead.
+[   2.463] bench> W (2408) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.463] I (2437) sim: simulador iniciado
+[   2.463] I (2438) app: fuente de datos: banco
+[   2.463] I (2439) main_task: Returned from app_main()
+[   4.023] >>> bench corrupt
+[   4.073] bench corrupt
+[   4.073] guardados sin validar; reinicia para cargarlos
+[   4.073] bench> 
+[   6.034] >>> reset
+[   6.186] bench> ets Jun  8 2016 00:22:57
+[   6.186] 
+[   6.186] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   6.186] configsip: 0, SPIWP:0xee
+[   6.186] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   6.186] mode:DIO, clock div:2
+[   6.186] load:0x3fff0040,len:6272
+[   6.186] load:0x40078000,len:15824
+[   6.186] load:0x40080400,len:3988
+[   6.186] entry 0x40080644
+[   6.236] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   6.236] I (27) boot: compile time Oct 21 2026 01:48:19
+[   6.236] I (27) boot: Multicore bootloader
+[   6.236] I (28) boot: chip revision: v1.0
+[   6.236] I (31) boot.esp32: SPI Speed      : 40MHz
+[   6.236] I (35) boot.esp32: SPI Mode       : DIO
+[   6.236] I (38) boot.esp32: SPI Flash Size : 4MB
+[   6.236] I (42) boot: Enabling RNG early entropy source...
+[   6.236] I (46) boot: Partition Table:
+[   6.236] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   6.236] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   6.236] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   6.236] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   6.236] I (75) boot: End of partition table
+[   6.236] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   6.336] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   6.336] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   6.387] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   6.537] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   6.587] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   6.587] I (406) boot: Loaded app from partition at offset 0x10000
+[   6.587] I (406) boot: Disabling RNG early entropy source...
+[   6.587] I (417) quad_psram: This chip is ESP32-D0WD
+[   6.587] I (418) esp_psram: Found 8MB PSRAM device
+[   6.587] I (418) esp_psram: Speed: 40MHz
+[   6.587] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   6.587] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   6.587] I (433) cpu_start: Multicore app
+[   7.442] I (1290) esp_psram: SPI SRAM memory test OK
+[   7.493] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   7.493] I (1298) cpu_start: Pro cpu start user code
+[   7.493] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   7.493] I (1300) app_init: Application information:
+[   7.493] I (1304) app_init: Project name:     esp32_dashboard
+[   7.493] I (1309) app_init: App version:      88e8989
+[   7.493] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   7.493] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   7.493] I (1322) app_init: ESP-IDF:          v6.1
+[   7.493] I (1326) efuse_init: Min chip rev:     v0.0
+[   7.543] I (1330) efuse_init: Max chip rev:     v3.99 
+[   7.543] I (1334) efuse_init: Chip rev:         v1.0
+[   7.543] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   7.543] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   7.543] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   7.543] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   7.543] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   7.543] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   7.594] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   7.594] I (1379) spi_flash: detected chip: generic
+[   7.594] I (1382) spi_flash: flash io: dio
+[   7.594] I (1386) main_task: Started on CPU0
+[   7.594] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   7.594] I (1396) main_task: Calling app_main()
+[   7.594] W (1418) settings: ajustes guardados inválidos o de otra versión; valores por defecto
+[   7.594] I (1420) st7796: version: 1.5.0
+[   7.594] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   7.846] I (1656) LVGL: Starting LVGL task
+[   8.599] [5n
+[   8.599] Type 'help' to get the list of commands.
+[   8.599] Use UP/DOWN arrows to navigate through command history.
+[   8.599] Press TAB when typing command name to auto-complete.
+[   8.599] 
+[   8.599] Your terminal application does not support escape sequences.
+[   8.599] 
+[   8.599] Line editing and history features are disabled.
+[   8.599] 
+[   8.599] On Windows, try using Windows Terminal or Putty instead.
+[   8.599] bench> W (2411) bench: build de banco: consola bench activa, fuente con valores fijos
+[   8.599] I (2440) sim: simulador iniciado
+[   8.599] I (2441) app: fuente de datos: banco
+[   8.599] I (2442) main_task: Returned from app_main()
+[  11.163] >>> bench settings
+[  11.214] bench settings
+[  11.214] unidad=bar bar_start=2500 shift=6000,6000,6000,6000,6000,6000
+[  11.214] bench> 
+### s6
+[   0.050] ets Jun  8 2016 00:22:57
+[   0.050] 
+[   0.050] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.050] configsip: 0, SPIWP:0xee
+[   0.050] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.050] mode:DIO, clock div:2
+[   0.050] load:0x3fff0040,len:6272
+[   0.050] load:0x40078000,len:15824
+[   0.050] load:0x40080400,len:3988
+[   0.050] entry 0x40080644
+[   0.101] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.101] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.101] I (27) boot: Multicore bootloader
+[   0.101] I (28) boot: chip revision: v1.0
+[   0.101] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.101] I (35) boot.esp32: SPI Mode       : DIO
+[   0.101] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.101] I (42) boot: Enabling RNG early entropy source...
+[   0.101] I (46) boot: Partition Table:
+[   0.101] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.101] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.101] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.101] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.101] I (75) boot: End of partition table
+[   0.101] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.201] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.201] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.252] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.403] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.454] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.454] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.454] I (406) boot: Disabling RNG early entropy source...
+[   0.454] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.454] I (418) esp_psram: Found 8MB PSRAM device
+[   0.454] I (418) esp_psram: Speed: 40MHz
+[   0.454] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.454] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.454] I (433) cpu_start: Multicore app
+[   1.309] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.359] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.359] I (1298) cpu_start: Pro cpu start user code
+[   1.359] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.359] I (1300) app_init: Application information:
+[   1.359] I (1304) app_init: Project name:     esp32_dashboard
+[   1.359] I (1309) app_init: App version:      88e8989
+[   1.359] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.359] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.359] I (1322) app_init: ESP-IDF:          v6.1
+[   1.359] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.410] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.410] I (1334) efuse_init: Chip rev:         v1.0
+[   1.410] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.410] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.410] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.410] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.410] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.410] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.460] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.460] I (1379) spi_flash: detected chip: generic
+[   1.460] I (1382) spi_flash: flash io: dio
+[   1.460] I (1386) main_task: Started on CPU0
+[   1.460] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.460] I (1396) main_task: Calling app_main()
+[   1.460] W (1418) settings: ajustes guardados inválidos o de otra versión; valores por defecto
+[   1.461] I (1420) st7796: version: 1.5.0
+[   1.461] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   1.662] I (1656) LVGL: Starting LVGL task
+[   2.466] [5n
+[   2.466] Type 'help' to get the list of commands.
+[   2.466] Use UP/DOWN arrows to navigate through command history.
+[   2.466] Press TAB when typing command name to auto-complete.
+[   2.466] 
+[   2.466] Your terminal application does not support escape sequences.
+[   2.466] 
+[   2.466] Line editing and history features are disabled.
+[   2.466] 
+[   2.466] On Windows, try using Windows Terminal or Putty instead.
+[   2.466] bench> W (2411) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.466] I (2440) sim: simulador iniciado
+[   2.466] I (2441) app: fuente de datos: banco
+[   2.466] I (2442) main_task: Returned from app_main()
+[   4.025] >>> bench live
+[   4.075] bench live
+[   4.075] bench> 
+[ 126.085] >>> bench latency
+[ 126.136] bench> bench latency
+[ 126.136] latencia de muestra a cuadro dibujado, últimas 1000: máx 76 ms, media 29 ms
+[ 126.136] bench> 
+[ 188.142] >>> bench latency
+[ 188.193] bench> bench latency
+[ 188.193] latencia de muestra a cuadro dibujado, últimas 1000: máx 68 ms, media 27 ms
+[ 188.193] bench> 
+### s7
+[   0.050] ets Jun  8 2016 00:22:57
+[   0.050] 
+[   0.050] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.050] configsip: 0, SPIWP:0xee
+[   0.050] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.050] mode:DIO, clock div:2
+[   0.050] load:0x3fff0040,len:6272
+[   0.050] load:0x40078000,len:15824
+[   0.050] load:0x40080400,len:3988
+[   0.050] entry 0x40080644
+[   0.101] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.101] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.101] I (27) boot: Multicore bootloader
+[   0.101] I (28) boot: chip revision: v1.0
+[   0.101] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.101] I (35) boot.esp32: SPI Mode       : DIO
+[   0.101] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.101] I (42) boot: Enabling RNG early entropy source...
+[   0.101] I (46) boot: Partition Table:
+[   0.101] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.101] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.101] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.101] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.101] I (75) boot: End of partition table
+[   0.101] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.201] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.201] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.251] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.402] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.452] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.452] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.452] I (406) boot: Disabling RNG early entropy source...
+[   0.452] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.452] I (418) esp_psram: Found 8MB PSRAM device
+[   0.452] I (418) esp_psram: Speed: 40MHz
+[   0.452] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.452] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.452] I (433) cpu_start: Multicore app
+[   1.306] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.356] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.356] I (1298) cpu_start: Pro cpu start user code
+[   1.356] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.356] I (1300) app_init: Application information:
+[   1.356] I (1304) app_init: Project name:     esp32_dashboard
+[   1.356] I (1309) app_init: App version:      88e8989
+[   1.356] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.356] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.356] I (1322) app_init: ESP-IDF:          v6.1
+[   1.356] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.406] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.406] I (1334) efuse_init: Chip rev:         v1.0
+[   1.406] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.406] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.406] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.406] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.406] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.406] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.457] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.457] I (1379) spi_flash: detected chip: generic
+[   1.457] I (1382) spi_flash: flash io: dio
+[   1.457] I (1386) main_task: Started on CPU0
+[   1.457] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.457] I (1396) main_task: Calling app_main()
+[   1.457] W (1418) settings: ajustes guardados inválidos o de otra versión; valores por defecto
+[   1.457] I (1420) st7796: version: 1.5.0
+[   1.457] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   1.707] I (1656) LVGL: Starting LVGL task
+[   2.461] [5n
+[   2.461] Type 'help' to get the list of commands.
+[   2.461] Use UP/DOWN arrows to navigate through command history.
+[   2.461] Press TAB when typing command name to auto-complete.
+[   2.461] 
+[   2.461] Your terminal application does not support escape sequences.
+[   2.461] 
+[   2.461] Line editing and history features are disabled.
+[   2.461] 
+[   2.461] On Windows, try using Windows Terminal or Putty instead.
+[   2.461] bench> W (2411) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.461] I (2440) sim: simulador iniciado
+[   2.461] I (2441) app: fuente de datos: banco
+[   2.461] I (2442) main_task: Returned from app_main()
+[   4.020] >>> bench fail_source
+[   4.070] bench fail_source
+[   4.071] ets Jun  8 2016 00:22:57
+[   4.071] 
+[   4.071] rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   4.071] configsip: 0, SPIWP:0xee
+[   4.071] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   4.071] mode:DIO, clock div:2
+[   4.071] load:0x3fff0040,len:6272
+[   4.071] load:0x40078000,len:15824
+[   4.071] load:0x40080400,len:3988
+[   4.071] entry 0x40080644
+[   4.121] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   4.121] I (27) boot: compile time Oct 21 2026 01:48:19
+[   4.121] I (27) boot: Multicore bootloader
+[   4.121] I (28) boot: chip revision: v1.0
+[   4.121] I (31) boot.esp32: SPI Speed      : 40MHz
+[   4.121] I (35) boot.esp32: SPI Mode       : DIO
+[   4.121] I (38) boot.esp32: SPI Flash Size : 4MB
+[   4.121] I (42) boot: Enabling RNG early entropy source...
+[   4.121] I (47) boot: Partition Table:
+[   4.121] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   4.171] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   4.171] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   4.171] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   4.171] I (75) boot: End of partition table
+[   4.171] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   4.272] I (183) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   4.272] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   4.272] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   4.423] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   4.473] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   4.473] I (406) boot: Loaded app from partition at offset 0x10000
+[   4.473] I (406) boot: Disabling RNG early entropy source...
+[   4.473] I (417) quad_psram: This chip is ESP32-D0WD
+[   4.473] I (418) esp_psram: Found 8MB PSRAM device
+[   4.473] I (418) esp_psram: Speed: 40MHz
+[   4.473] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   4.473] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   4.473] I (433) cpu_start: Multicore app
+[   5.329] I (1290) esp_psram: SPI SRAM memory test OK
+[   5.379] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   5.379] I (1298) cpu_start: Pro cpu start user code
+[   5.379] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   5.379] I (1300) app_init: Application information:
+[   5.379] I (1304) app_init: Project name:     esp32_dashboard
+[   5.379] I (1309) app_init: App version:      88e8989
+[   5.379] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   5.379] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   5.379] I (1322) app_init: ESP-IDF:          v6.1
+[   5.379] I (1326) efuse_init: Min chip rev:     v0.0
+[   5.429] I (1330) efuse_init: Max chip rev:     v3.99 
+[   5.429] I (1334) efuse_init: Chip rev:         v1.0
+[   5.429] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   5.429] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   5.429] I (1350) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   5.429] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   5.430] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   5.430] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   5.480] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   5.480] I (1379) spi_flash: detected chip: generic
+[   5.480] I (1382) spi_flash: flash io: dio
+[   5.480] I (1386) main_task: Started on CPU0
+[   5.480] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   5.480] I (1396) main_task: Calling app_main()
+[   5.480] W (1418) settings: ajustes guardados inválidos o de otra versión; valores por defecto
+[   5.480] I (1420) st7796: version: 1.5.0
+[   5.480] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   5.732] I (1656) LVGL: Starting LVGL task
+[   6.486] [5n
+[   6.486] Type 'help' to get the list of commands.
+[   6.486] Use UP/DOWN arrows to navigate through command history.
+[   6.486] Press TAB when typing command name to auto-complete.
+[   6.486] 
+[   6.486] Your terminal application does not support escape sequences.
+[   6.486] 
+[   6.486] Line editing and history features are disabled.
+[   6.486] 
+[   6.486] On Windows, try using Windows Terminal or Putty instead.
+[   6.486] bench> W (2411) bench: build de banco: consola bench activa, fuente con valores fijos
+[   6.486] W (2440) bench: falla provocada de la fuente (bench fail_source)
+[   6.486] E (2441) app: no se pudo iniciar la fuente de datos
+[   6.536] I (2458) main_task: Returned from app_main()
+[  11.060] >>> bench settings
+[  11.111] bench settings
+[  11.111] unidad=bar bar_start=2500 shift=6000,6000,6000,6000,6000,6000
+[  11.111] bench> 
+### s8
+[   0.051] ets Jun  8 2016 00:22:57
+[   0.051] 
+[   0.051] rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   0.051] configsip: 0, SPIWP:0xee
+[   0.051] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   0.051] mode:DIO, clock div:2
+[   0.051] load:0x3fff0040,len:6272
+[   0.051] load:0x40078000,len:15824
+[   0.051] load:0x40080400,len:3988
+[   0.051] entry 0x40080644
+[   0.051] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   0.051] I (27) boot: compile time Oct 21 2026 01:48:19
+[   0.051] I (27) boot: Multicore bootloader
+[   0.051] I (28) boot: chip revision: v1.0
+[   0.051] I (31) boot.esp32: SPI Speed      : 40MHz
+[   0.051] I (35) boot.esp32: SPI Mode       : DIO
+[   0.101] I (38) boot.esp32: SPI Flash Size : 4MB
+[   0.101] I (42) boot: Enabling RNG early entropy source...
+[   0.101] I (46) boot: Partition Table:
+[   0.101] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   0.101] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   0.101] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   0.101] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   0.101] I (75) boot: End of partition table
+[   0.101] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   0.202] I (182) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   0.202] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   0.252] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   0.402] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   0.453] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   0.453] I (406) boot: Loaded app from partition at offset 0x10000
+[   0.453] I (406) boot: Disabling RNG early entropy source...
+[   0.453] I (417) quad_psram: This chip is ESP32-D0WD
+[   0.453] I (418) esp_psram: Found 8MB PSRAM device
+[   0.453] I (418) esp_psram: Speed: 40MHz
+[   0.453] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   0.453] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   0.453] I (433) cpu_start: Multicore app
+[   1.310] I (1290) esp_psram: SPI SRAM memory test OK
+[   1.360] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   1.360] I (1298) cpu_start: Pro cpu start user code
+[   1.360] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   1.360] I (1300) app_init: Application information:
+[   1.360] I (1304) app_init: Project name:     esp32_dashboard
+[   1.360] I (1309) app_init: App version:      88e8989
+[   1.360] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   1.360] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   1.360] I (1322) app_init: ESP-IDF:          v6.1
+[   1.360] I (1326) efuse_init: Min chip rev:     v0.0
+[   1.411] I (1330) efuse_init: Max chip rev:     v3.99 
+[   1.411] I (1334) efuse_init: Chip rev:         v1.0
+[   1.411] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   1.411] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   1.411] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   1.411] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   1.411] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   1.411] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   1.411] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   1.411] I (1379) spi_flash: detected chip: generic
+[   1.411] I (1382) spi_flash: flash io: dio
+[   1.411] I (1386) main_task: Started on CPU0
+[   1.411] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   1.461] I (1396) main_task: Calling app_main()
+[   1.461] W (1418) settings: ajustes guardados inválidos o de otra versión; valores por defecto
+[   1.461] I (1420) st7796: version: 1.5.0
+[   1.461] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   1.662] I (1656) LVGL: Starting LVGL task
+[   2.466] [5n
+[   2.466] Type 'help' to get the list of commands.
+[   2.466] Use UP/DOWN arrows to navigate through command history.
+[   2.466] Press TAB when typing command name to auto-complete.
+[   2.466] 
+[   2.466] Your terminal application does not support escape sequences.
+[   2.466] 
+[   2.466] Line editing and history features are disabled.
+[   2.467] 
+[   2.467] On Windows, try using Windows Terminal or Putty instead.
+[   2.467] bench> W (2411) bench: build de banco: consola bench activa, fuente con valores fijos
+[   2.467] I (2440) sim: simulador iniciado
+[   2.467] I (2441) app: fuente de datos: banco
+[   2.467] I (2442) main_task: Returned from app_main()
+[   4.025] >>> bench panic
+[   4.075] bench panic
+[   4.075] 
+[   4.075] abort() was called at PC 0x400df979 on core 1
+[   4.075] 
+[   4.075] 
+[   4.075] Backtrace: 0x4008b8f4:0x3ffbf100 0x4008b8bd:0x3ffbf120 0x4008a315:0x3ffbf140 0x400df979:0x3ffbf1b0 0x400dffa3:0x3ffbf230 0x400e014c:0x3ffbf250
+[   4.075] 
+[   4.075] 
+[   4.075] 
+[   4.075] 
+[   4.075] ELF file SHA256: 6da41b690
+[   4.075] 
+[   4.075] Rebooting...
+[   4.075] ets Jun  8 2016 00:22:57
+[   4.075] 
+[   4.075] rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+[   4.075] configsip: 0, SPIWP:0xee
+[   4.075] clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+[   4.075] mode:DIO, clock div:2
+[   4.075] load:0x3fff0040,len:6272
+[   4.126] load:0x40078000,len:15824
+[   4.126] load:0x40080400,len:3988
+[   4.126] entry 0x40080644
+[   4.126] I (27) boot: ESP-IDF v6.1 2nd stage bootloader
+[   4.126] I (27) boot: compile time Oct 21 2026 01:48:19
+[   4.126] I (27) boot: Multicore bootloader
+[   4.126] I (28) boot: chip revision: v1.0
+[   4.126] I (31) boot.esp32: SPI Speed      : 40MHz
+[   4.126] I (35) boot.esp32: SPI Mode       : DIO
+[   4.126] I (38) boot.esp32: SPI Flash Size : 4MB
+[   4.126] I (42) boot: Enabling RNG early entropy source...
+[   4.126] I (46) boot: Partition Table:
+[   4.126] I (49) boot: ## Label            Usage          Type ST Offset   Length
+[   4.176] I (55) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+[   4.176] I (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+[   4.176] I (68) boot:  2 factory          factory app      00 00 00010000 00177000
+[   4.176] I (75) boot: End of partition table
+[   4.176] I (78) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=4253ch (271676) map
+[   4.277] I (183) esp_image: segment 1: paddr=00052564 vaddr=3ffb0000 size=03810h ( 14352) load
+[   4.277] I (188) esp_image: segment 2: paddr=00055d7c vaddr=40080000 size=0a29ch ( 41628) load
+[   4.277] I (206) esp_image: segment 3: paddr=00060020 vaddr=400d0020 size=7b354h (504660) map
+[   4.478] I (386) esp_image: segment 4: paddr=000db37c vaddr=4008a29c size=06a80h ( 27264) load
+[   4.478] I (397) esp_image: segment 5: paddr=000e1e04 vaddr=50000004 size=00028h (    40) load
+[   4.478] I (406) boot: Loaded app from partition at offset 0x10000
+[   4.478] I (406) boot: Disabling RNG early entropy source...
+[   4.528] I (417) quad_psram: This chip is ESP32-D0WD
+[   4.528] I (418) esp_psram: Found 8MB PSRAM device
+[   4.528] I (418) esp_psram: Speed: 40MHz
+[   4.528] I (418) esp_psram: PSRAM initialized, cache is in low/high (2-core) mode.
+[   4.528] W (425) esp_psram: Virtual address not enough for PSRAM, map as much as we can. 4MB is mapped
+[   4.528] I (433) cpu_start: Multicore app
+[   5.383] I (1290) esp_psram: SPI SRAM memory test OK
+[   5.383] I (1298) cpu_start: GPIO 3 and 1 are used as console UART I/O pins
+[   5.383] I (1298) cpu_start: Pro cpu start user code
+[   5.383] I (1298) cpu_start: cpu freq: 240000000 Hz
+[   5.383] I (1300) app_init: Application information:
+[   5.383] I (1304) app_init: Project name:     esp32_dashboard
+[   5.433] I (1309) app_init: App version:      88e8989
+[   5.433] I (1313) app_init: Compile time:     Oct 21 2026 02:04:53
+[   5.433] I (1318) app_init: ELF file SHA256:  6da41b690...
+[   5.433] I (1322) app_init: ESP-IDF:          v6.1
+[   5.433] I (1326) efuse_init: Min chip rev:     v0.0
+[   5.433] I (1330) efuse_init: Max chip rev:     v3.99 
+[   5.433] I (1334) efuse_init: Chip rev:         v1.0
+[   5.433] I (1338) heap_init: Initializing. RAM available for dynamic allocation:
+[   5.433] I (1344) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM
+[   5.483] I (1349) heap_init: At 3FFB4900 len 0002B700 (173 KiB): DRAM
+[   5.483] I (1355) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM
+[   5.483] I (1360) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM
+[   5.483] I (1366) heap_init: At 40090D1C len 0000F2E4 (60 KiB): IRAM
+[   5.483] I (1372) esp_psram: Adding pool of 4096K of PSRAM memory to heap allocator
+[   5.483] I (1379) spi_flash: detected chip: generic
+[   5.483] I (1382) spi_flash: flash io: dio
+[   5.483] I (1386) main_task: Started on CPU0
+[   5.483] I (1387) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+[   5.483] I (1396) main_task: Calling app_main()
+[   5.533] W (1418) settings: ajustes guardados inválidos o de otra versión; valores por defecto
+[   5.533] I (1420) st7796: version: 1.5.0
+[   5.533] I (1421) st7796_general: LCD panel create success, version: 1.5.0
+[   5.734] I (1656) LVGL: Starting LVGL task
+[   6.489] [5n
+[   6.489] Type 'help' to get the list of commands.
+[   6.489] Use UP/DOWN arrows to navigate through command history.
+[   6.489] Press TAB when typing command name to auto-complete.
+[   6.489] 
+[   6.489] Your terminal application does not support escape sequences.
+[   6.489] 
+[   6.539] Line editing and history features are disabled.
+[   6.539] 
+[   6.539] On Windows, try using Windows Terminal or Putty instead.
+[   6.539] bench> W (2411) bench: build de banco: consola bench activa, fuente con valores fijos
+[   6.539] I (2440) sim: simulador iniciado
+[   6.539] I (2441) app: fuente de datos: banco
+[   6.539] I (2442) main_task: Returned from app_main()
