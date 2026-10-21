@@ -65,13 +65,13 @@ Qué test lo verifica no va aquí: cada test cita sus SW-xx con un comentario `/
 | SW-108 | El firmware debe mostrar el Boost_Pico con la Resolución_Unidad de la Unidad_Presión seleccionada. | SYS-23 | ui | Demostración en la tarjeta (falta): con un pico fijo del simulador, "Pico" muestra los decimales de cada unidad. | Implementado | Misma resolución que el Boost_Relativo para poder compararlos. |
 | SW-109 | El firmware debe llenar el Arco_Boost en pasos de 0.01 bar entre 0 bar y 1.5 bar. | SYS-24 | ui | Demostración en la tarjeta (falta): con 0.75 bar el arco llega a la mitad y con 2 bar queda lleno. | Implementado | Arriba de 1.5 bar el arco queda lleno y el número sigue subiendo. |
 
-La frecuencia de SYS-03 (10 Hz) depende de cada cuánto se pide el PID 0x0B: queda para SW-6xx, con el cliente OBD.
+La frecuencia de SYS-03 (10 Hz) depende de cada cuánto se pide el PID 0x0B: lo pide SW-620.
 
 ## SW-2xx Detección de marcha
 
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
 | --- | --- | --- | --- | --- | --- | --- |
-| SW-201 | Cuando el firmware recibe una RPM o una velocidad del vehículo nueva, el firmware debe recalcular la Marcha_Engranada con la última RPM y la última velocidad recibidas. | SYS-14 | vehicle_logic | Prueba en host: a 50 km/h, la RPM de cada razón calibrada da su marcha de 1.ª a 6.ª; con la RPM y la velocidad en muestras separadas se detecta la 2.ª. | Verificado | La caja manual no reporta la marcha: se calcula con los PID 0x0C y 0x0D, que OBD puede entregar en respuestas separadas. La frecuencia de 5 Hz de SYS-14 la cubren SW-501 y el ritmo de los PID (SW-6xx). |
+| SW-201 | Cuando el firmware recibe una RPM o una velocidad del vehículo nueva, el firmware debe recalcular la Marcha_Engranada con la última RPM y la última velocidad recibidas. | SYS-14 | vehicle_logic | Prueba en host: a 50 km/h, la RPM de cada razón calibrada da su marcha de 1.ª a 6.ª; con la RPM y la velocidad en muestras separadas se detecta la 2.ª. | Verificado | La caja manual no reporta la marcha: se calcula con los PID 0x0C y 0x0D, que OBD puede entregar en respuestas separadas. La frecuencia de 5 Hz de SYS-14 la cubren SW-501 y el ritmo de los PID (SW-621). |
 | SW-202 | Mientras la velocidad del vehículo es menor que 10 km/h, el firmware debe mostrar "–" en lugar de la Marcha_Engranada. | SYS-14 | vehicle_logic | Prueba en host: 1200 rpm a 9 km/h dan marcha nula. | Verificado | Límite de SYS-14. Debajo de él, la resolución de 1 km/h hace saltar la Razón_RPM_Velocidad (a 5 km/h, ±1 km/h es ±20 %). |
 | SW-203 | Si la Razón_RPM_Velocidad difiere en más de 5 % de la razón calibrada de cada marcha [AND] en más de 7 % de la razón calibrada de la Marcha_Engranada mostrada, el firmware debe mostrar "–" en lugar de la Marcha_Engranada. | SYS-15 | vehicle_logic | Prueba en host: 900 rpm a 60 km/h (razón 15, clutch pisado) dan marcha nula. | Verificado | Tolerancias de SYS-15, provisionales. Cubre clutch pisado, neutral y cambio en curso. Enmienda 2026-10-20: antes "Si la Razón_RPM_Velocidad difiere en más de 5 % de la razón calibrada de cada marcha, el firmware debe mostrar '–' en lugar de la Marcha_Engranada"; se agrega la condición de 7 % al enmendar SYS-15. |
 | SW-204 | Mientras la Razón_RPM_Velocidad difiere en menor o igual a 7 % de la razón calibrada de la Marcha_Engranada mostrada, el firmware debe conservar esa Marcha_Engranada. | SYS-22 | vehicle_logic | Prueba en host: 6 % arriba de la razón de 3.ª da marcha nula sin marcha previa y 3.ª con la 3.ª como previa. | Verificado | Histéresis de 2 % sobre la tolerancia para que la marcha no parpadee cerca del límite. Enmienda 2026-10-20: la traza pasa de `derivado` a SYS-22, que se agregó para esta histéresis. |
@@ -101,7 +101,7 @@ Parámetros provisionales (`vehicle.h`):
 | SW-307 | El firmware debe rechazar cada RPM_Cambio menor que 3000 rpm, mayor que 9000 rpm o que no sea múltiplo de 100 rpm. | SYS-06 | settings | Inspección de `valid()` en `settings.c`. Prueba (falta test): `settings` usa NVS y no compila en host. | Implementado | Rango y paso de SYS-06, TBD según el limitador del 1.6 T-GDI (Q14). Falta la pantalla de ajustes que permita cambiarlas (SW-5xx). |
 
 Se verifica en host la lógica (SW-301, SW-303 sin el tiempo, SW-304 y SW-305); solo en la tarjeta, el dibujo
-(SW-302, SW-306) y los 150 ms de SW-303. La frecuencia de SYS-04 (15 Hz) depende del ritmo del PID 0x0C (SW-6xx).
+(SW-302, SW-306) y los 150 ms de SW-303. La frecuencia de SYS-04 (15 Hz) depende del ritmo del PID 0x0C (SW-621).
 
 
 ## SW-4xx Cronómetro 0–100
@@ -124,7 +124,7 @@ Se verifica en host la lógica (SW-301, SW-303 sin el tiempo, SW-304 y SW-305); 
 
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
 | --- | --- | --- | --- | --- | --- | --- |
-| SW-501 | Cuando cambia un valor que muestra la pantalla activa, el firmware debe dibujar el valor nuevo en menor o igual a 50 ms. | SYS-03, SYS-04, SYS-14 | ui | Demostración en la tarjeta (falta): registrar el instante de cada muestra y el del envío del cuadro por SPI; pasa si la diferencia es menor o igual a 50 ms en 1000 cambios. | Implementado | La UI refresca cada 33 ms (unos 30 Hz) y redibuja solo lo que cambió. Con este límite, la frecuencia que ve el usuario la fija el ritmo de las respuestas OBD (SW-6xx). 50 ms es provisional: falta medir el render en la tarjeta. |
+| SW-501 | Cuando cambia un valor que muestra la pantalla activa, el firmware debe dibujar el valor nuevo en menor o igual a 50 ms. | SYS-03, SYS-04, SYS-14 | ui | Demostración en la tarjeta (falta): registrar el instante de cada muestra y el del envío del cuadro por SPI; pasa si la diferencia es menor o igual a 50 ms en 1000 cambios. | Implementado | La UI refresca cada 33 ms (unos 30 Hz) y redibuja solo lo que cambió. Con este límite, la frecuencia que ve el usuario la fija el ritmo de las respuestas OBD (SW-620 a SW-622). 50 ms es provisional: falta medir el render en la tarjeta. |
 | SW-502 | El firmware debe mostrar las RPM del motor redondeadas al múltiplo de 10 rpm más cercano. | SYS-25 | ui | Demostración en la tarjeta (falta): 4234 rpm del simulador se muestran como 4230. | Implementado | |
 | SW-503 | El firmware debe mostrar la velocidad del vehículo redondeada al km/h entero más cercano. | SYS-26 | ui | Demostración en la tarjeta (falta): con valores fijos del simulador. | Implementado | El PID 0x0D ya es entero; el redondeo cubre al simulador. |
 | SW-504 | El firmware debe mostrar el tiempo de 0 a 100 km/h truncado a 0.01 s. | SYS-27, SYS-28 | ui | Demostración en la tarjeta (falta): 6789 ms se muestran como 6.78 s. | Implementado | Truncar evita mostrar un tiempo menor que el medido. |
@@ -142,6 +142,60 @@ Se verifica en host la lógica (SW-301, SW-303 sin el tiempo, SW-304 y SW-305); 
 | SW-515 | Cuando el usuario sale de la Pantalla_Ajustes sin confirmar, el firmware debe conservar los ajustes anteriores. | derivado | ui | Demostración en la tarjeta (falta). | Propuesto | Salir sin querer no debe cambiar la calibración. |
 
 La navegación (SW-505 a SW-507) ya existe; la Pantalla_Ajustes (SW-508 a SW-515) es de M2.
+
+## SW-6xx Fuente de datos, CAN y OBD-II
+
+Lo que convierte tramas y decide qué pedir es C puro, para probarlo en host como `vehicle_logic`; el bus, los
+tiempos y la ECU real solo se prueban en banco (simulador CAN, M3) o en el vehículo (M4). Salvo SW-640 y SW-641,
+nada está implementado.
+
+Bus y direcciones:
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-601 | El firmware debe operar el controlador CAN a 500 kbit/s con identificadores de 11 bits conforme a ISO 15765-4. | SYS-01 | data_source | Prueba en banco (falta): intercambio con el simulador de ECU; prueba en el vehículo: respuesta válida a 01 00. | Propuesto | TWAI interno con el SN65HVD230 (GPIO 32/33, `bsp.h`). En modo normal: el equipo tiene que dar ACK a las respuestas. |
+| SW-602 | El firmware debe enviar al bus únicamente solicitudes de modo 01 o de modo 09. | SYS-12 | data_source | Prueba en host (falta): el codificador rechaza cualquier otro modo. Inspección: una sola función envía tramas. | Propuesto | Alcance de solo lectura: no se escriben datos ni se borran códigos. |
+| SW-603 | Cuando inicia la comunicación, el firmware debe enviar la solicitud 01 00 a la dirección funcional 0x7DF. | SYS-01 | data_source | Prueba en banco (falta): log del bus. | Propuesto | Identifica qué ECU responden y qué PID soportan. |
+| SW-604 | Cuando recibe respuestas a la solicitud 01 00, el firmware debe dirigir las solicitudes siguientes a la dirección física de la ECU que respondió desde 0x7E8. | derivado | data_source | Prueba en host (falta): con respuestas de 0x7E8 y 0x7E9, las solicitudes van a 0x7E0. Prueba en banco (falta). | Propuesto | Decisión de arquitectura: ir directo a la ECU del motor (0x7E0 → 0x7E8) evita que respondan las demás. Si no responde 0x7E8, TBD: usar la primera que responda. |
+| SW-605 | El firmware debe solicitar únicamente los PID que la ECU reporta como soportados en sus respuestas a 01 00 y 01 20. | derivado | data_source | Prueba en host (falta): con un mapa de PID soportados sin 0x33, el planificador nunca lo pide. | Propuesto | Pedir un PID no soportado gasta un timeout cada vez. 0x0B, 0x0C y 0x0D están en 01–20; 0x33 en 21–40. |
+| SW-606 | Si la ECU no soporta un PID que muestra la pantalla activa, el firmware debe mostrar "–" en lugar de ese valor. | derivado | ui | Prueba en banco (falta): simulador de ECU sin 0x0B. | Propuesto | Un 0 fijo parece una lectura válida. Sin 0x33 no aplica: hay barómetro por defecto (SW-106). |
+
+Tramas:
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-610 | El firmware debe convertir la respuesta de cada PID 0x0B, 0x0C, 0x0D y 0x33 con las fórmulas de modo 01 de SAE J1979. | SYS-02, SYS-04, SYS-14 | data_source | Prueba en host (falta): tramas de ejemplo de cada PID, incluidos los valores extremos (0 y 255 en cada byte). | Propuesto | MAP = A kPa; RPM = (256 A + B) / 4; velocidad = A km/h; barómetro = A kPa. |
+| SW-611 | El firmware debe agrupar en cada solicitud solo los PID cuya respuesta cabe en una trama CAN de 8 bytes. | derivado | data_source | Prueba en host (falta): el planificador nunca arma una solicitud con respuesta de más de 7 bytes de datos. | Propuesto | Con respuesta de una trama no hace falta ISO-TP de varias tramas ni control de flujo. `01 0C 0D` cabe (6 bytes) y trae RPM y velocidad del mismo instante; `01 0B 0C 0D` ya no. |
+| SW-612 | El firmware debe marcar cada muestra con el instante de recepción de la respuesta con una resolución de 1 ms o menor. | SYS-08 | data_source | Inspección; prueba en banco (falta): respuestas con retraso conocido del simulador de ECU. | Propuesto | El 0–100 interpola con estos instantes (SW-404, SW-405). Se marca al recibir, no al procesar. |
+
+Planificador de PID (tabla "Planificador de PIDs" del documento vivo):
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-620 | Mientras la pantalla de boost está activa, el firmware debe solicitar el PID 0x0B con una frecuencia mayor o igual a 10 Hz. | SYS-03 | data_source | Prueba en host (falta): planificador con respuestas simuladas a 25 ms. Prueba en el vehículo (falta): intervalo entre respuestas en el log. | Propuesto | Con SW-501, cumple la frecuencia de SYS-03 en pantalla. |
+| SW-621 | Mientras la pantalla de RPM está activa, el firmware debe solicitar los PID 0x0C y 0x0D con una frecuencia mayor o igual a 15 Hz. | SYS-04, SYS-14 | data_source | Como SW-620. | Propuesto | En una sola solicitud (SW-611). 15 Hz es de SYS-04 y cubre los 5 Hz de SYS-14. Factibilidad TBD: una ECU contesta unas 10–30 veces por segundo. |
+| SW-622 | Mientras la pantalla 0–100 está activa, el firmware debe solicitar el PID 0x0D con una frecuencia mayor o igual a 10 Hz. | SYS-07, SYS-08 | data_source | Como SW-620. | Propuesto | SW-403 supone muestras a 10 Hz. |
+| SW-623 | Mientras el cronómetro 0–100 km/h está midiendo, el firmware debe solicitar únicamente el PID 0x0D. | derivado | data_source | Prueba en host (falta): durante la medición, el planificador solo arma solicitudes de 0x0D. | Propuesto | Cada solicitud de otro PID le quita ritmo a la velocidad y agranda el error del 0–100. |
+| SW-624 | Mientras una pantalla de datos está activa, el firmware debe solicitar cada PID de "frecuencia baja" de esa pantalla con una frecuencia mayor o igual a 1 Hz. | derivado | data_source | Prueba en host (falta). | Propuesto | Boost: 0x0C; RPM: 0x0B (tabla del documento vivo). Mantiene la lógica al día sin quitarle ritmo al PID principal. 1 Hz TBD. |
+| SW-625 | El firmware debe solicitar el PID 0x33 con un periodo menor o igual a 30 s. | derivado | data_source | Prueba en host (falta). | Propuesto | La presión barométrica casi no cambia; mientras llega se usa el valor por defecto (SW-106). |
+
+Fallas:
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-630 | Si la ECU no responde una solicitud en 100 ms, el firmware debe enviar la solicitud siguiente. | derivado | data_source | Prueba en host (falta): con una solicitud sin respuesta, la siguiente sale a los 100 ms. Prueba en banco (falta). | Propuesto | ISO 15765-4 da a la ECU 50 ms (P2CAN) para responder; 100 ms deja margen. TBD. |
+| SW-631 | Si el controlador CAN entra en bus-off, el firmware debe recuperarlo y reanudar las solicitudes en menor o igual a 1 s. | derivado | data_source | Prueba en banco (falta): provocar bus-off con el bus en corto o sin terminación. | Propuesto | Un bus-off sin recuperar deja el equipo sin datos hasta reiniciarlo. |
+| SW-632 | Si no recibe ninguna respuesta válida de la ECU durante 2 s o más, el firmware debe mostrar el Aviso_Sin_Datos. | SYS-30 | data_source | Prueba en banco (falta): desconectar el CAN con el equipo funcionando y medir cuándo aparece el aviso. | Propuesto | Igual que SYS-30. Con la fuente que no inicia, el aviso es SW-904. |
+| SW-633 | Cuando vuelve a recibir respuestas válidas de la ECU, el firmware debe retirar el Aviso_Sin_Datos en menor o igual a 500 ms. | SYS-30 | data_source | Prueba en banco (falta): reconectar el CAN. | Propuesto | |
+| SW-634 | Mientras no recibe respuestas de la ECU, el firmware debe repetir la solicitud 01 00 con un periodo de 1 s. | derivado | data_source | Prueba en host (falta); prueba en el vehículo (falta): conectar con el motor apagado y luego encenderlo. | Propuesto | El equipo puede encenderse antes que la ECU, o la ECU apagarse y volver. |
+
+Fuentes de datos:
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-640 | El firmware debe obtener las muestras de la Fuente_Datos elegida en la configuración de compilación. | derivado | main | Inspección: `Kconfig.projbuild` y `create_source()` en `app_main`. | Implementado | Decisión de arquitectura: la UI y la lógica se desarrollan sin el SN65HVD230 ni el auto. Hoy solo existe el simulador. |
+| SW-641 | Cuando la Fuente_Datos es el simulador, el firmware debe entregar RPM y velocidad cada 50 ms, MAP cada 100 ms y presión barométrica cada 30 s. | derivado | data_source | Inspección de `sim_model.h`; prueba en host (falta test): contar los campos de las muestras de `sim_model_sample`. | Implementado | Mismos ritmos y cuantización que se esperan de OBD, para que la lógica se pruebe en condiciones parecidas. |
+| SW-642 | Cuando la Fuente_Datos es el replay, el firmware debe entregar las muestras de un Registro_Datos grabado con sus intervalos originales ± 5 ms. | derivado | data_source | Prueba en la tarjeta (falta): reproducir un registro y comparar los instantes. | Propuesto | Repetir en banco lo que pasó en el auto. Dónde se guarda el registro a reproducir: TBD. |
 
 ## SW-7xx Persistencia y logs
 
@@ -162,7 +216,7 @@ Registro de datos (Q13). Nada está implementado todavía; asignado a M2:
 | --- | --- | --- | --- | --- | --- | --- |
 | SW-711 | El firmware debe guardar en el Registro_Datos cada muestra recibida de la fuente de datos con su instante en ms. | SYS-32 | data_source | Prueba en host (falta): con un registro de 4 muestras, las 4 se leen en orden con su instante. | Propuesto | Guarda la muestra tal como llega: los campos que no trae quedan vacíos (OBD entrega cada PID a su ritmo). |
 | SW-712 | Mientras el Registro_Datos está lleno, el firmware debe reemplazar la muestra más antigua con cada muestra nueva. | SYS-32 | data_source | Prueba en host (falta): con capacidad de 4 muestras, después de 6 se leen la 3.ª a la 6.ª. | Propuesto | Buffer circular: siempre quedan las lecturas más recientes. |
-| SW-713 | El firmware debe tener un Registro_Datos con capacidad para 10 min o más de muestras al ritmo máximo de la fuente de datos. | SYS-32 | data_source | Análisis: capacidad del buffer entre el ritmo máximo de muestras de la fuente. | Propuesto | Una muestra (`vehicle_sample_t`) ocupa 24 B: a 50 muestras/s, 10 min son unos 0.7 MB de los 8 MB de PSRAM. Ritmo TBD con el planificador de PIDs (SW-6xx). |
+| SW-713 | El firmware debe tener un Registro_Datos con capacidad para 10 min o más de muestras al ritmo máximo de la fuente de datos. | SYS-32 | data_source | Análisis: capacidad del buffer entre el ritmo máximo de muestras de la fuente. | Propuesto | Una muestra (`vehicle_sample_t`) ocupa 24 B: a 50 muestras/s, 10 min son unos 0.7 MB de los 8 MB de PSRAM. Ritmo TBD con el planificador de PIDs (SW-620 a SW-625). |
 | SW-714 | Cuando recibe el pedido de volcado por el puerto serial, el firmware debe enviar el Registro_Datos en el Formato_CSV_Registro, de la muestra más antigua a la más reciente. | SYS-33 | main | Demostración en la tarjeta (falta): pedir el volcado con `read_log.py` y abrir el CSV. | Propuesto | El texto del pedido y la velocidad del puerto quedan para el diseño: en CSV, 10 min de registro pasan de 1 MB y a 115200 baud tardan más de 1 min. |
 
 SW-206 (razones calibradas) y SW-411 (5 mejores tiempos) se quedan en SW-2xx y SW-4xx: moverlos obligaría a
@@ -175,7 +229,7 @@ eliminarlos y crear IDs nuevos sin ganar nada. SW-7xx cubre el mecanismo que com
 | SW-901 | Cuando se aplica la alimentación, el firmware debe mostrar la pantalla de boost en menor o igual a 3 s. | SYS-29 | main | Demostración en la tarjeta (falta): video desde que se conecta la alimentación hasta la pantalla de boost con valores. | Implementado | Orden de arranque en `app_main`: ajustes, pantalla, inicio, fuente, lógica y UI. 3 s TBD, igual que SYS-29: falta medirlo (incluye el bootloader y la prueba de la PSRAM). |
 | SW-902 | Si falla la inicialización de la memoria no volátil, el firmware debe reiniciar el ESP32. | derivado | main | Inspección: `ESP_ERROR_CHECK(settings_init())` en `app_main` con `CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`. | Implementado | Sin NVS no hay ajustes ni calibración. `settings_init` ya borra y reintenta una NVS llena o de otra versión: si aun así falla, es la flash. Va antes que la pantalla, así que no puede avisar en ella; el aviso queda en el log. |
 | SW-903 | Si falla la inicialización de la pantalla, el firmware debe reiniciar el ESP32. | derivado | main | Inspección: `ESP_ERROR_CHECK(bsp_display_start())` en `app_main` con `CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`. | Implementado | Sin pantalla el equipo no tiene función. Una falla del touch no cuenta: se avisa en el log y la pantalla sigue mostrando datos. |
-| SW-904 | Si la fuente de datos no se puede crear o iniciar, el firmware debe mostrar el Aviso_Sin_Datos sobre la pantalla de boost. | SYS-30 | main | Demostración en la tarjeta (falta): build de prueba con `data_source_start` que regresa error. | Implementado | Decisión de arquitectura: una falla de CAN o de la ECU degrada con aviso y la pantalla sigue. El aviso cuando dejan de llegar datos con la fuente ya iniciada es de SW-6xx (#18). |
+| SW-904 | Si la fuente de datos no se puede crear o iniciar, el firmware debe mostrar el Aviso_Sin_Datos sobre la pantalla de boost. | SYS-30 | main | Demostración en la tarjeta (falta): build de prueba con `data_source_start` que regresa error. | Implementado | Decisión de arquitectura: una falla de CAN o de la ECU degrada con aviso y la pantalla sigue. El aviso cuando dejan de llegar datos con la fuente ya iniciada es SW-632. |
 | SW-905 | Si una tarea no cede la CPU durante 5 s o más, el firmware debe reiniciar el ESP32. | SYS-31 | main | Prueba en la tarjeta (falta): build de prueba con un bucle sin ceder en la tarea de LVGL; pasa si reinicia en 6 s o menos y el log muestra el backtrace. | Propuesto | El watchdog de tareas vigila las tareas idle de los dos núcleos a 5 s, pero hoy solo avisa por el log (`CONFIG_ESP_TASK_WDT_PANIC` desactivado): la pantalla se queda congelada. Falta activarlo. |
 | SW-906 | Antes de reiniciar por un panic, el firmware debe enviar el backtrace por el puerto serial. | derivado | main | Inspección de `sdkconfig` (`CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT`). Demostración con `read_log.py`, que decodifica el backtrace con el `.elf` del build. | Implementado | Diagnóstico de reinicios en banco y en el auto. |
 | SW-907 | El firmware debe ubicar los buffers de dibujo de la pantalla en RAM interna con acceso por DMA. | derivado | bsp | Inspección: `buff_dma = true` en `bsp.c`. | Implementado | El DMA de SPI del ESP32 no lee PSRAM. Dos buffers de 40 líneas de 480 píxeles a 16 bits: 76.8 KB de RAM interna. |
