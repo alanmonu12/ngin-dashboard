@@ -69,7 +69,23 @@ La frecuencia de SYS-03 (10 Hz) depende de cada cuánto se pide el PID 0x0B: que
 
 ## SW-2xx Detección de marcha
 
-_Pendiente: issue #4._
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-201 | Cuando el firmware recibe una RPM o una velocidad del vehículo nueva, el firmware debe recalcular la Marcha_Engranada con la última RPM y la última velocidad recibidas. | SYS-14 | vehicle_logic | Prueba en host: a 50 km/h, la RPM de cada razón calibrada da su marcha de 1.ª a 6.ª; con la RPM y la velocidad en muestras separadas se detecta la 2.ª. | Verificado | La caja manual no reporta la marcha: se calcula con los PID 0x0C y 0x0D, que OBD puede entregar en respuestas separadas. La frecuencia de 5 Hz de SYS-14 la cubren SW-501 y el ritmo de los PID (SW-6xx). |
+| SW-202 | Mientras la velocidad del vehículo es menor que 10 km/h, el firmware debe mostrar "–" en lugar de la Marcha_Engranada. | SYS-14 | vehicle_logic | Prueba en host: 1200 rpm a 9 km/h dan marcha nula. | Verificado | Límite de SYS-14. Debajo de él, la resolución de 1 km/h hace saltar la Razón_RPM_Velocidad (a 5 km/h, ±1 km/h es ±20 %). |
+| SW-203 | Si la Razón_RPM_Velocidad difiere en más de 5 % de la razón calibrada de cada marcha, el firmware debe mostrar "–" en lugar de la Marcha_Engranada. | SYS-15 | vehicle_logic | Prueba en host: 900 rpm a 60 km/h (razón 15, clutch pisado) dan marcha nula. | Verificado | Tolerancia de SYS-15, provisional. Cubre clutch pisado, neutral y cambio en curso. |
+| SW-204 | Mientras la Razón_RPM_Velocidad difiere en menor o igual a 7 % de la razón calibrada de la Marcha_Engranada mostrada, el firmware debe conservar esa Marcha_Engranada. | derivado | vehicle_logic | Prueba en host: 6 % arriba de la razón de 3.ª da marcha nula sin marcha previa y 3.ª con la 3.ª como previa. | Verificado | Histéresis de 2 % sobre la tolerancia para que la marcha no parpadee cerca del límite. **Conflicto:** entre 5 % y 7 % contradice SYS-15, que pide "–" arriba de 5 %. Pendiente enmendar SYS-15 o quitar la histéresis. |
+| SW-205 | Si la razón calibrada de una marcha es 0, el firmware debe excluir esa marcha de la detección de la Marcha_Engranada. | derivado | vehicle_logic | Prueba en host: con la razón de 3.ª en 0, la RPM y velocidad de 3.ª dan marcha nula. | Verificado | 0 significa "sin calibrar"; además evita dividir entre 0. |
+| SW-206 | El firmware debe conservar la razón calibrada de cada marcha de 1.ª a 6.ª tras un corte de alimentación. | SYS-16 | settings | Demostración en la tarjeta (falta): calibrar, desconectar, encender y comparar las razones. | Propuesto | `settings` ya guarda `gear_ratio` en NVS, pero no hay calibración que lo escriba (SW-5xx). Mientras, se usan las razones estimadas por defecto o las del simulador. |
+
+Parámetros provisionales (`vehicle.h`):
+
+| Parámetro | Valor | Origen | Estado |
+| --- | --- | --- | --- |
+| Tolerancia de la razón | 5 % | SYS-15 | TBD tras medir las razones en el Forte GT |
+| Histéresis | 2 % | Diseño (SW-204) | TBD junto con la tolerancia; ver el conflicto con SYS-15 |
+| Velocidad mínima | 10 km/h | SYS-14 | Firme |
+| Razones por defecto | 120, 70, 48, 37, 30, 25 rpm/(km/h) | Estimadas | Se reemplazan con la calibración |
 
 ## SW-3xx Shift light
 
@@ -83,6 +99,6 @@ _Pendiente: issue #6._
 
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
 | --- | --- | --- | --- | --- | --- | --- |
-| SW-501 | Cuando cambia un valor que muestra la pantalla activa, el firmware debe dibujar el valor nuevo en menor o igual a 50 ms. | SYS-03 | ui | Demostración en la tarjeta (falta): registrar el instante de cada muestra y el del envío del cuadro por SPI; pasa si la diferencia es menor o igual a 50 ms en 1000 cambios. | Implementado | La UI refresca cada 33 ms (unos 30 Hz) y redibuja solo lo que cambió. Con este límite, la frecuencia que ve el usuario la fija el ritmo de las respuestas OBD (SW-6xx). 50 ms es provisional: falta medir el render en la tarjeta. |
+| SW-501 | Cuando cambia un valor que muestra la pantalla activa, el firmware debe dibujar el valor nuevo en menor o igual a 50 ms. | SYS-03, SYS-14 | ui | Demostración en la tarjeta (falta): registrar el instante de cada muestra y el del envío del cuadro por SPI; pasa si la diferencia es menor o igual a 50 ms en 1000 cambios. | Implementado | La UI refresca cada 33 ms (unos 30 Hz) y redibuja solo lo que cambió. Con este límite, la frecuencia que ve el usuario la fija el ritmo de las respuestas OBD (SW-6xx). 50 ms es provisional: falta medir el render en la tarjeta. |
 
 _El resto (navegación, pantalla de ajustes): pendiente._

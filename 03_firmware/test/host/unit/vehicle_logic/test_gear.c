@@ -13,6 +13,7 @@ TEST_GROUP(gear);
 TEST_SETUP(gear) {}
 TEST_TEAR_DOWN(gear) {}
 
+/* Verifica: SW-201 */
 TEST(gear, detects_each_gear)
 {
     for (int g = 1; g <= VEHICLE_GEAR_COUNT; g++) {
@@ -22,18 +23,21 @@ TEST(gear, detects_each_gear)
     }
 }
 
+/* Verifica: SW-202 */
 TEST(gear, below_min_speed_is_none)
 {
     /* SYS-14: debajo de 10 km/h no se muestra marcha */
     TEST_ASSERT_EQUAL_INT(VEHICLE_GEAR_NONE, vehicle_gear_detect(&cfg, 1200.0f, 9.0f, VEHICLE_GEAR_NONE));
 }
 
+/* Verifica: SW-203 */
 TEST(gear, out_of_tolerance_is_none)
 {
     /* SYS-15: clutch pisado, la razón no coincide con ninguna marcha */
     TEST_ASSERT_EQUAL_INT(VEHICLE_GEAR_NONE, vehicle_gear_detect(&cfg, 900.0f, 60.0f, VEHICLE_GEAR_NONE));
 }
 
+/* Verifica: SW-204 */
 TEST(gear, hysteresis_keeps_previous_gear)
 {
     /* 6 % arriba de 3.ª: fuera de la tolerancia, dentro de tolerancia + histéresis */
@@ -42,6 +46,7 @@ TEST(gear, hysteresis_keeps_previous_gear)
     TEST_ASSERT_EQUAL_INT(3, vehicle_gear_detect(&cfg, rpm, speed, 3));
 }
 
+/* Verifica: SW-205 */
 TEST(gear, uncalibrated_gear_is_skipped)
 {
     vehicle_gear_cfg_t c = cfg;

@@ -71,6 +71,7 @@ TEST(vehicle, baro_before_any_map_shows_no_boost)
     TEST_ASSERT_EQUAL_FLOAT(0.0f, v.out.boost_peak_bar);
 }
 
+/* Verifica: SW-201 */
 TEST(vehicle, gear_from_separate_rpm_and_speed_samples)
 {
     /* OBD entrega 0x0C y 0x0D en respuestas separadas. */
