@@ -131,6 +131,31 @@ Se verifica en host la lógica (SW-301, SW-303 sin el tiempo, SW-304 y SW-305); 
 
 _El resto (navegación, pantalla de ajustes): pendiente._
 
+## SW-7xx Persistencia y logs
+
+Ajustes en NVS (`settings`):
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-701 | El firmware debe conservar la Unidad_Presión, la RPM_Cambio de cada marcha y la RPM_Inicio_Barra tras un corte de alimentación. | SYS-20 | settings | Demostración en la tarjeta (falta): cambiar cada ajuste, desconectar, encender y comparar. | Implementado | `settings_save` guarda el struct completo en NVS y `settings_init` lo lee al arrancar. Falta la pantalla de ajustes que llame a `settings_save` (SW-5xx). Las razones calibradas son SW-206. |
+| SW-702 | Si no hay ajustes guardados, el firmware debe usar los Ajustes_Por_Defecto. | derivado | settings | Inspección de `settings_init`. Demostración en la tarjeta (falta): borrar la flash y arrancar. | Implementado | Primer arranque o NVS recién borrada. Los valores por defecto son provisionales: las razones son estimadas y la RPM_Cambio depende del limitador (Q14). |
+| SW-703 | Si los ajustes guardados están fuera de rango, el firmware debe usar los Ajustes_Por_Defecto. | derivado | settings | Inspección de `valid()` en `settings.c`. Prueba (falta test): `settings` usa NVS y no compila en host. | Implementado | Un ajuste corrupto no debe llegar a la lógica. Rangos: Unidad_Presión conocida, RPM_Cambio de SW-307, RPM_Inicio_Barra menor que 3000 rpm y razones mayores o iguales a 0. |
+| SW-704 | Si la NVS no tiene páginas libres o tiene el formato de otra versión de ESP-IDF, el firmware debe borrarla y volver a inicializarla. | derivado | settings | Inspección de `nvs_open_flash` en `settings.c`. | Implementado | Es la recuperación que recomienda ESP-IDF; pierde los ajustes, pero sin ella el equipo no arranca (SW-902). |
+| SW-705 | Cuando los ajustes guardados tienen una versión anterior a la del firmware, el firmware debe conservar la razón calibrada de cada marcha y la RPM_Cambio de cada marcha guardadas. | derivado | settings | Prueba en la tarjeta (falta): guardar ajustes con la versión 1, cargar un firmware con la versión 2 y comparar. | Propuesto | El documento vivo pide versionar los ajustes "para agregar campos sin perder la calibración". Hoy `settings_init` descarta todo lo de otra versión y carga los Ajustes_Por_Defecto. Falta migrar de una versión a la siguiente. |
+| SW-706 | Si un ajuste a guardar está fuera de rango, el firmware debe conservar los ajustes guardados anteriores. | derivado | settings | Inspección: `settings_save` valida antes de escribir y regresa `ESP_ERR_INVALID_ARG`. | Implementado | Un error en la pantalla de ajustes no debe dañar la calibración. Qué es fuera de rango: SW-703. |
+
+Registro de datos (Q13). Nada está implementado todavía; asignado a M2:
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| SW-711 | El firmware debe guardar en el Registro_Datos cada muestra recibida de la fuente de datos con su instante en ms. | SYS-32 | data_source | Prueba en host (falta): con un registro de 4 muestras, las 4 se leen en orden con su instante. | Propuesto | Guarda la muestra tal como llega: los campos que no trae quedan vacíos (OBD entrega cada PID a su ritmo). |
+| SW-712 | Mientras el Registro_Datos está lleno, el firmware debe reemplazar la muestra más antigua con cada muestra nueva. | SYS-32 | data_source | Prueba en host (falta): con capacidad de 4 muestras, después de 6 se leen la 3.ª a la 6.ª. | Propuesto | Buffer circular: siempre quedan las lecturas más recientes. |
+| SW-713 | El firmware debe tener un Registro_Datos con capacidad para 10 min o más de muestras al ritmo máximo de la fuente de datos. | SYS-32 | data_source | Análisis: capacidad del buffer entre el ritmo máximo de muestras de la fuente. | Propuesto | Una muestra (`vehicle_sample_t`) ocupa 24 B: a 50 muestras/s, 10 min son unos 0.7 MB de los 8 MB de PSRAM. Ritmo TBD con el planificador de PIDs (SW-6xx). |
+| SW-714 | Cuando recibe el pedido de volcado por el puerto serial, el firmware debe enviar el Registro_Datos en el Formato_CSV_Registro, de la muestra más antigua a la más reciente. | SYS-33 | main | Demostración en la tarjeta (falta): pedir el volcado con `read_log.py` y abrir el CSV. | Propuesto | El texto del pedido y la velocidad del puerto quedan para el diseño: en CSV, 10 min de registro pasan de 1 MB y a 115200 baud tardan más de 1 min. |
+
+SW-206 (razones calibradas) y SW-411 (5 mejores tiempos) se quedan en SW-2xx y SW-4xx: moverlos obligaría a
+eliminarlos y crear IDs nuevos sin ganar nada. SW-7xx cubre el mecanismo que comparten.
+
 ## SW-9xx Arranque, errores y recursos
 
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
