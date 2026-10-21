@@ -61,9 +61,18 @@ Asignación de pines del conector SAE J1962 tipo A (12 V) que usa HW-301.
 | 14 | CAN_L | CANL del transceptor |
 | 16 | +12 V de batería, permanente | Entrada de la protección y de la fuente |
 
-Del lado del WT32-SC01 (header de 2×20, paso 2.0 mm): TWAI TX en GPIO 32 (pin 6) y RX en GPIO 33 (pin 5); el
-transceptor se alimenta del 3V3 del módulo y la fuente entrega 5 V a la entrada externa. Los pines del header para
-3V3, 5 V y tierra están por confirmar con la hoja de datos.
+Del lado del WT32-SC01, según la figura 4 de su hoja de datos (`02_hardware/01_datasheets/WT32-SC01-datasheet.pdf`),
+en el header de 2×20, paso 2.0 mm (los dos headers están conectados pin a pin):
+
+| Pin del header | Señal | Va a |
+| --- | --- | --- |
+| 29 | GPIO 32, TWAI TX | TXD del transceptor |
+| 31 | GPIO 33, TWAI RX | RXD del transceptor |
+| 3, 4, 37 o 38 | +3V3 | VCC del transceptor |
+| 1, 2, 39 o 40 | +5V | Salida de la fuente |
+| 5–8 o 33–36 | GND | Tierra de la fuente y del transceptor |
+
+La tarjeta solo acepta 5 V: la hoja de datos no da otra entrada y pide 1 A o más.
 
 **Terminación del bus.** El equipo no agrega terminación (HW-303): el bus del auto ya tiene 120 Ω en cada extremo, y
 una tercera resistencia bajaría la resistencia del bus de 60 Ω a 40 Ω. En el banco, el arnés pone los dos 120 Ω, uno en
@@ -104,7 +113,7 @@ cada extremo, junto al simulador de ECU (`07_tools/02_can_simulator`).
 
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
 | --- | --- | --- | --- | --- | --- | --- |
-| HW-401 | Mientras el backlight está al 100 %, el hardware debe tener una Luminancia_Pantalla mayor o igual a 400 cd/m². | SYS-13 | pantalla | Prueba con luminancímetro sobre una pantalla blanca. | Propuesto | La pantalla es la del WT32-SC01 y no se cambia en esta fase. 400 cd/m² TBD: falta el dato del panel y un criterio de legibilidad para SYS-13. Si el panel no llega, SYS-13 se enmienda o se cambia el montaje para darle sombra. |
+| HW-401 | Mientras el backlight está al 100 %, el hardware debe tener una Luminancia_Pantalla mayor o igual a 400 cd/m². | SYS-13 | pantalla | Prueba con luminancímetro sobre una pantalla blanca. | Propuesto | La pantalla es la del WT32-SC01 y no se cambia en esta fase. 400 cd/m² TBD: la hoja de datos del WT32-SC01 no da la luminancia del panel y falta un criterio de legibilidad para SYS-13. Si el panel no llega, SYS-13 se enmienda o se cambia el montaje para darle sombra. |
 
 ## HW-5xx Ambiente
 
@@ -121,7 +130,7 @@ piezas en M3 (#36).
 | --- | --- | --- | --- |
 | ESP32-WROVER-B | −40 °C a 85 °C | Hoja de datos de Espressif | Sí, justo en el límite |
 | SN65HVD230 | −40 °C a 85 °C | Hoja de datos de TI | Sí, justo en el límite |
-| Panel LCD y touch del WT32-SC01 | Por confirmar | Hoja de datos del WT32-SC01 | Por confirmar |
+| Panel LCD y touch del WT32-SC01 | Por confirmar | La hoja de datos del WT32-SC01 no lo da; falta la del panel | Por confirmar |
 | Fuente de 12 V a 5 V | Por elegir | — | — |
 | TVS de entrada y de bus | Por elegir | — | — |
 | Fusible o PTC (HW-205) | Por elegir | — | — |
