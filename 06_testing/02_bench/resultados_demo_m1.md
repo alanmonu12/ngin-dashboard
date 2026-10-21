@@ -33,6 +33,8 @@ capturado por el puerto.
 | SW-505 | Sí | `cambio de pantalla` de 150 a 205 ms en los 13 cambios por gesto | |
 | SW-506 | Sí | Incluido en los 13 cambios, en los dos sentidos | |
 | SW-507 | Sí | En los 13 cambios, `valores en la pantalla nueva` (50–95 ms) llega antes que `cambio de pantalla` (150–205 ms); Alan no vio valores en 0 ni viejos | Con el enunciado anterior (≤ 50 ms desde el gesto) no pasaba; SW-507 enmendado en #56 |
+| SW-640 | Sí | Inspección: `create_source()` en `main/app_main.c` según `Kconfig.projbuild`; el log de arranque dice `fuente de datos: banco` | No estaba en el guion: se redactó después de abrir #28 |
+| SW-641 | Sí | Prueba en host nueva, `sim_vehicle.sample_rates_match_obd` | No estaba en el guion; la prueba se agrega en este PR |
 | SW-701 | Sí | Tras guardar psi, 5500 rpm en 1.ª y 2000 rpm de RPM_Inicio_Barra, y reiniciar, `bench settings` los muestra y la pantalla dice `psi` | Reinicio por el pin EN, no corte de alimentación: la NVS está en flash y no depende de ella |
 | SW-702 | Sí | Con la flash borrada: `sin ajustes guardados; valores por defecto` y `bench settings` = bar, 2500, 6000 en cada marcha | |
 | SW-703 | Sí | Tras `bench corrupt` y reiniciar: `ajustes guardados inválidos o de otra versión; valores por defecto` | |

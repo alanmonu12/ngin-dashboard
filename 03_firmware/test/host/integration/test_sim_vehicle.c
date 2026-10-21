@@ -96,7 +96,36 @@ TEST(sim_vehicle, full_pull_reports_gears_in_order_and_0_100_close_to_truth)
     TEST_ASSERT_TRUE(v.out.boost_peak_bar > 0.5f);
 }
 
+/* Verifica: SW-641 */
+TEST(sim_vehicle, sample_rates_match_obd)
+{
+    /* Ritmos de SW-641: RPM y velocidad cada 50 ms, MAP cada 100 ms, barómetro cada 30 s. */
+    const uint32_t ticks = 60000u / TICK_MS; /* 60 s */
+    uint32_t last_ms[4] = {0}, count[4] = {0};
+    const uint32_t field[4] = {VEHICLE_HAS_RPM, VEHICLE_HAS_SPEED, VEHICLE_HAS_MAP, VEHICLE_HAS_BARO};
+    const uint32_t period_ms[4] = {50, 50, 100, 30000};
+
+    for (uint32_t tick = 0; tick < ticks; tick++) {
+        uint32_t t_ms = tick * TICK_MS;
+        vehicle_sample_t s = sim_model_sample(&m, t_ms, tick);
+        for (int f = 0; f < 4; f++) {
+            if (s.fields & field[f]) {
+                if (count[f] > 0) {
+                    TEST_ASSERT_EQUAL_UINT32(period_ms[f], t_ms - last_ms[f]);
+                }
+                last_ms[f] = t_ms;
+                count[f]++;
+            }
+        }
+        sim_model_step(&m, TICK_MS / 1000.0f);
+    }
+    for (int f = 0; f < 4; f++) {
+        TEST_ASSERT_EQUAL_UINT32(60000u / period_ms[f], count[f]);
+    }
+}
+
 TEST_GROUP_RUNNER(sim_vehicle)
 {
     RUN_TEST_CASE(sim_vehicle, full_pull_reports_gears_in_order_and_0_100_close_to_truth);
+    RUN_TEST_CASE(sim_vehicle, sample_rates_match_obd);
 }
