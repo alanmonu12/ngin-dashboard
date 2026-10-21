@@ -166,8 +166,12 @@ void bench_on_snapshot(vehicle_outputs_t *out)
 static void refr_ready_cb(lv_event_t *e)
 {
     (void)e;
+    static bool first_drawn;
+    bool log_first = false;
     taskENTER_CRITICAL(&bench.lock);
     if (bench.drawing) {
+        log_first = !first_drawn;
+        first_drawn = true;
         bench.drawing = false;
         uint32_t latency = now_ms() - bench.drawing_t_ms;
         bench.latency_ms[bench.latency_next] = latency > UINT16_MAX ? UINT16_MAX : (uint16_t)latency;
@@ -177,6 +181,10 @@ static void refr_ready_cb(lv_event_t *e)
         }
     }
     taskEXIT_CRITICAL(&bench.lock);
+    if (log_first) {
+        /* SW-901: esp_log_timestamp cuenta desde el reset, con el bootloader incluido. */
+        ESP_LOGI(TAG, "primer cuadro con datos: %lu ms desde el reset", (unsigned long)esp_log_timestamp());
+    }
 }
 
 /* --- Comandos --- */

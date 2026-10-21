@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "esp_check.h"
+#include "esp_log.h"
 #include "lvgl.h"
 
 #include "bsp.h"
@@ -55,6 +56,11 @@ static struct {
     lv_color_t last_led_color[LED_COUNT];
     bool led_cache_valid;
     vehicle_z2h_state_t last_z2h_state;
+#if CONFIG_APP_BENCH
+    /* Build de banco: tiempos del último cambio de pantalla (SW-505 a SW-507), medidos desde el gesto. */
+    uint32_t switch_tick;
+    bool switch_values_pending;
+#endif
 } ui;
 
 static int decimal_scale(int decimals)
@@ -293,6 +299,12 @@ static void refresh_cb(lv_timer_t *t)
     /* SW-501: dibujar en este mismo ciclo. El temporizador de refresco de LVGL no está sincronizado con este
      * y, si se le espera, suma hasta un periodo más de latencia (se midió 76 ms en el build de banco). */
     lv_refr_now(NULL);
+#if CONFIG_APP_BENCH
+    if (ui.switch_values_pending) {
+        ui.switch_values_pending = false;
+        ESP_LOGI(TAG, "valores en la pantalla nueva: %lu ms", (unsigned long)lv_tick_elaps(ui.switch_tick));
+    }
+#endif
 }
 
 static void invalidate_cache(void)
@@ -302,6 +314,10 @@ static void invalidate_cache(void)
     ui.last_gear = -1;
     ui.last_z2h_state = (vehicle_z2h_state_t)-1;
 }
+
+#if CONFIG_APP_BENCH
+static void screen_loaded_cb(lv_event_t *e);
+#endif
 
 /* Siguiente pantalla del Ciclo_Pantallas con dir = LV_DIR_LEFT, anterior con LV_DIR_RIGHT. */
 static void show_next_screen(lv_dir_t dir)
@@ -319,6 +335,10 @@ static void show_next_screen(lv_dir_t dir)
     }
     ui.active = next;
     invalidate_cache();
+#if CONFIG_APP_BENCH
+    ui.switch_tick = lv_tick_get();
+    ui.switch_values_pending = true;
+#endif
     lv_screen_load_anim(ui.screens[next], anim, SCREEN_ANIM_MS, 0, false);
 }
 
@@ -363,6 +383,9 @@ esp_err_t ui_start(const ui_config_t *cfg)
     for (int i = 0; i < SCREEN_COUNT; i++) {
         ui.screens[i] = make_screen();
         lv_obj_add_event_cb(ui.screens[i], gesture_cb, LV_EVENT_GESTURE, NULL);
+#if CONFIG_APP_BENCH
+        lv_obj_add_event_cb(ui.screens[i], screen_loaded_cb, LV_EVENT_SCREEN_LOADED, NULL);
+#endif
     }
     build_boost(ui.screens[SCREEN_BOOST]);
     build_rpm(ui.screens[SCREEN_RPM]);
@@ -379,6 +402,12 @@ esp_err_t ui_start(const ui_config_t *cfg)
 }
 
 #if CONFIG_APP_BENCH
+static void screen_loaded_cb(lv_event_t *e)
+{
+    (void)e;
+    ESP_LOGI(TAG, "cambio de pantalla: %lu ms", (unsigned long)lv_tick_elaps(ui.switch_tick));
+}
+
 static const char *label_text(const lv_obj_t *label)
 {
     return label ? lv_label_get_text(label) : "";

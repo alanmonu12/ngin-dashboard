@@ -125,6 +125,12 @@ class TraceTest(unittest.TestCase):
         _, errors = self.run_trace(reqs, GOOD_TEST)
         self.assert_one_error(errors, "SW-501 repetido")
 
+    def test_row_after_blank_line_fails(self):
+        reqs = dict(GOOD_REQS)
+        reqs["SW-501"] = "\n" + reqs["SW-501"]
+        _, errors = self.run_trace(reqs, GOOD_TEST)
+        self.assert_one_error(errors, "fila fuera de su tabla")
+
     def test_pipe_inside_cell_fails(self):
         reqs = dict(GOOD_REQS, **{"SW-501": GOOD_REQS["SW-501"].replace("R. |", "R \\| x. |")})
         _, errors = self.run_trace(reqs, GOOD_TEST)
