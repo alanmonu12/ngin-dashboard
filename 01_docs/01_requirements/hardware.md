@@ -26,6 +26,7 @@ cumple. Mismo esquema que `software.md`.
 | HW-2xx | Protección de la entrada de alimentación |
 | HW-3xx | Interfaz CAN y conector OBD-II |
 | HW-4xx | Pantalla |
+| HW-5xx | Ambiente (temperatura) |
 
 ## Formato
 
@@ -37,7 +38,7 @@ Una tabla por área, con las mismas columnas que `software.md`: la matriz de tra
 | ID | `HW-nnn` |
 | Requisito | El enunciado, una oración |
 | Traza | SYS-xx separados por coma, o `derivado` |
-| Componente | `fuente`, `protección`, `can`, `cable` o `pantalla` |
+| Componente | `fuente`, `protección`, `can`, `cable`, `pantalla` o `equipo` (todo el hardware) |
 | Verificación | Método (prueba, análisis, inspección o demostración) y criterio de éxito |
 | Estado | `Propuesto`, `Implementado`, `Verificado` o `Eliminado` |
 | Razón | Por qué existe, de dónde salen los números y si son provisionales |
@@ -104,3 +105,26 @@ cada extremo, junto al simulador de ECU (`07_tools/02_can_simulator`).
 | ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
 | --- | --- | --- | --- | --- | --- | --- |
 | HW-401 | Mientras el backlight está al 100 %, el hardware debe tener una Luminancia_Pantalla mayor o igual a 400 cd/m². | SYS-13 | pantalla | Prueba con luminancímetro sobre una pantalla blanca. | Propuesto | La pantalla es la del WT32-SC01 y no se cambia en esta fase. 400 cd/m² TBD: falta el dato del panel y un criterio de legibilidad para SYS-13. Si el panel no llega, SYS-13 se enmienda o se cambia el montaje para darle sombra. |
+
+## HW-5xx Ambiente
+
+| ID | Requisito | Traza | Componente | Verificación | Estado | Razón |
+| --- | --- | --- | --- | --- | --- | --- |
+| HW-501 | Mientras la Temperatura_Ambiente está entre −10 °C y 85 °C, el hardware debe completar la Prueba_Funcional. | SYS-34 | equipo | Análisis: el rango de operación de cada componente de la tabla Rango de temperatura cubre de −10 °C a 85 °C. Prueba: Prueba_Funcional después de 1 h en una cámara o un horno a −10 °C y a 85 °C, si se consigue uno; si no, demostración en el auto estacionado al sol con un termómetro junto al equipo. | Propuesto | Decisión 2026-10-21 (SYS-34). Riesgo: el panel LCD y el touch suelen operar hasta 70 °C; si la hoja de datos del WT32-SC01 lo confirma, se enmienda SYS-34 o se acepta que arriba de 70 °C la pantalla pierda contraste. La fuente y las protecciones de M3 se eligen con rango de 85 °C o más. |
+
+### Rango de temperatura
+
+Análisis de HW-501: rango de operación de cada componente según su hoja de datos. Se completa al elegir las
+piezas en M3 (#36).
+
+| Componente | Rango de operación | Fuente | Cubre −10 °C a 85 °C |
+| --- | --- | --- | --- |
+| ESP32-WROVER-B | −40 °C a 85 °C | Hoja de datos de Espressif | Sí, justo en el límite |
+| SN65HVD230 | −40 °C a 85 °C | Hoja de datos de TI | Sí, justo en el límite |
+| Panel LCD y touch del WT32-SC01 | Por confirmar | Hoja de datos del WT32-SC01 | Por confirmar |
+| Fuente de 12 V a 5 V | Por elegir | — | — |
+| TVS de entrada y de bus | Por elegir | — | — |
+| Fusible o PTC (HW-205) | Por elegir | — | — |
+
+Un PTC baja su corriente de sostén con la temperatura: a 85 °C puede abrir abajo de la corriente normal del equipo.
+Si la protección de HW-205 es un PTC, se elige con su curva de derating a 85 °C.
