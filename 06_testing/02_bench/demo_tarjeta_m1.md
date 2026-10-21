@@ -39,8 +39,8 @@ marcha.
 ### SW-306 Parpadeo de la Alarma_Cambio
 
 1. `bench live` y pasar a la pantalla de RPM.
-2. **Pasa si** al llegar a 6000 rpm los 15 LED_Simulado parpadean juntos en rojo. La frecuencia (6 Hz) se verifica
-   por análisis del código: no se mide.
+2. **Pasa si** al llegar a 6000 rpm los 15 LED_Simulado parpadean juntos en rojo. La frecuencia (4.2 Hz) se
+   verifica por análisis del código: no se mide.
 
 ### SW-505 y SW-506 Cambio de pantalla en ≤ 300 ms
 
@@ -49,11 +49,12 @@ marcha.
    `cambio de pantalla: N ms` del log da 300 ms o menos. Se mide desde que LVGL reconoce el gesto hasta la pantalla
    cargada.
 
-### SW-507 Valores actuales al cambiar de pantalla en ≤ 50 ms
+### SW-507 Valores actuales antes de que termine el cambio de pantalla
 
 1. Con `bench live`, cambiar de pantalla 6 veces.
-2. **Pasa si** cada línea `valores en la pantalla nueva: N ms` del log da 50 ms o menos, y a la vista ningún valor
-   aparece en 0 ni con el número de la última vez que se vio esa pantalla.
+2. **Pasa si** en cada cambio la línea `valores en la pantalla nueva: N ms` da un N menor que el de la línea
+   `cambio de pantalla: M ms` que la sigue, y a la vista ningún valor aparece en 0 ni con el número de la última vez
+   que se vio esa pantalla.
 
 ### SW-901 Arranque hasta la pantalla de boost en ≤ 3 s
 

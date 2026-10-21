@@ -12,9 +12,12 @@
 
 static const char *TAG = "ui";
 
-#define LOCK_TIMEOUT_MS         1000
-#define REFRESH_MS              20 /* 50 Hz: la espera a la copia más el dibujo cabe en los 50 ms de SW-501 */
-#define BLINK_HALF_MS           83 /* Alarma_Cambio a 6 Hz (4–8 Hz en el glosario) */
+#define LOCK_TIMEOUT_MS 1000
+#define REFRESH_MS      20 /* 50 Hz: la espera a la copia más el dibujo cabe en los 50 ms de SW-501 */
+/* Alarma_Cambio a 4.2 Hz (4–8 Hz en el glosario), múltiplo del refresco. Más lento deja ver menos el tearing:
+ * el panel no expone su señal TE a ningún GPIO (probado 2026-10-21) y no se puede sincronizar con su barrido.
+ */
+#define BLINK_HALF_MS           120
 #define BOOST_ARC_STEPS_PER_BAR 100 /* el arco avanza en centésimas de bar */
 #define BOOST_ARC_MAX           150 /* escala de 0 a 1.5 bar */
 #define SCREEN_ANIM_MS          150
@@ -59,7 +62,7 @@ static struct {
 #if CONFIG_APP_BENCH
     /* Build de banco: tiempos del último cambio de pantalla (SW-505 a SW-507), medidos desde el gesto. */
     uint32_t switch_tick;
-    bool switch_values_pending;
+    bool switch_values_pending, switch_loading;
 #endif
 } ui;
 
@@ -338,6 +341,7 @@ static void show_next_screen(lv_dir_t dir)
 #if CONFIG_APP_BENCH
     ui.switch_tick = lv_tick_get();
     ui.switch_values_pending = true;
+    ui.switch_loading = true;
 #endif
     lv_screen_load_anim(ui.screens[next], anim, SCREEN_ANIM_MS, 0, false);
 }
@@ -405,6 +409,11 @@ esp_err_t ui_start(const ui_config_t *cfg)
 static void screen_loaded_cb(lv_event_t *e)
 {
     (void)e;
+    /* La carga de la primera pantalla en ui_start no viene de un gesto: no se mide. */
+    if (!ui.switch_loading) {
+        return;
+    }
+    ui.switch_loading = false;
     ESP_LOGI(TAG, "cambio de pantalla: %lu ms", (unsigned long)lv_tick_elaps(ui.switch_tick));
 }
 
