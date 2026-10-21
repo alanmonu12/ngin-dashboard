@@ -42,6 +42,17 @@ if [ ${#SOURCES[@]} -gt 0 ]; then
     fi
 fi
 
+# --- Trazabilidad: si cambian los requisitos, los tests o el propio script (sobre la copia de trabajo).
+for f in "${STAGED[@]}"; do
+    if [[ $f =~ ^(01_docs/01_requirements/software\.md|03_firmware/test/|07_tools/01_scripts/trace\.py) ]]; then
+        if ! python3 07_tools/01_scripts/trace.py >/dev/null; then
+            echo "pre-commit: trazabilidad con errores (detalle arriba)." >&2
+            exit 1
+        fi
+        break
+    fi
+done
+
 # --- Tests en host: solo si el commit toca código que compilan (componentes o los propios tests).
 NEEDS_TESTS=0
 for f in "${STAGED[@]}"; do
