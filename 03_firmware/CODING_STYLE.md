@@ -12,6 +12,9 @@ Una excepción se justifica en un comentario junto al código.
   CF=$(ls ~/.espressif/tools/esp-clang/*/esp-clang/bin/clang-format | head -1)
   find main components bsp test -name '*.[ch]' -not -path '*/build/*' | xargs "$CF" -i --style=file
   ```
+- El pre-commit local (`.githooks/pre-commit`) rechaza el commit si lo staged no tiene formato, y corre los
+  tests de host si toca `components/` o `test/host/`. Se activa una vez por clon con
+  `git config core.hooksPath .githooks`; `git commit --no-verify` lo salta.
 - Includes en bloques separados por una línea vacía, en este orden: header propio del `.c`, C estándar,
   ESP-IDF/FreeRTOS/terceros, proyecto. clang-format los agrupa y ordena.
 - No se formatea código de terceros (`managed_components/`, `build/`).

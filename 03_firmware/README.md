@@ -44,6 +44,13 @@ Un test nuevo: archivo en `unit/<componente>/` o `integration/` con `TEST_GROUP`
 host con cobertura, build del firmware con guardas de tamaño (`07_tools/01_scripts/check_size.py`) y
 artefactos (`.bin`, `.elf`, `.map`). Ramas y PRs: `CODING_STYLE.md` §9.
 
+Los dos primeros checks también corren antes de cada commit con el hook de `.githooks/pre-commit`
+(no hace falta `get_idf`). Se activa una vez por clon:
+
+```bash
+git config core.hooksPath .githooks
+```
+
 ## Ajustes de la pantalla
 
 Si la imagen sale girada, en espejo o con colores invertidos, se corrige con

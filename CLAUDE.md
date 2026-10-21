@@ -18,6 +18,7 @@ https://claude.ai/code/artifact/7d05a37c-db8c-4c35-bbf3-e4ddce83907b
 
 ```bash
 get_idf                                   # activa ESP-IDF v6.1 (alias en ~/.zshrc)
+git config core.hooksPath .githooks       # una vez por clon: pre-commit con formato y tests en host
 
 cd 03_firmware
 idf.py build
