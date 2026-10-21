@@ -55,6 +55,15 @@ TEST(gear, uncalibrated_gear_is_skipped)
                           vehicle_gear_detect(&c, 48.0f * 50.0f, 50.0f, VEHICLE_GEAR_NONE));
 }
 
+/* Verifica: SW-207 */
+TEST(gear, new_gear_needs_tolerance_not_hysteresis)
+{
+    /* La histéresis solo conserva la marcha mostrada (3.ª): la 4.ª entra con 5 %, no con 7 %. */
+    float speed = 50.0f;
+    TEST_ASSERT_EQUAL_INT(4, vehicle_gear_detect(&cfg, 37.0f * 1.04f * speed, speed, 3));
+    TEST_ASSERT_EQUAL_INT(VEHICLE_GEAR_NONE, vehicle_gear_detect(&cfg, 37.0f * 1.06f * speed, speed, 3));
+}
+
 TEST_GROUP_RUNNER(gear)
 {
     RUN_TEST_CASE(gear, detects_each_gear);
@@ -62,4 +71,5 @@ TEST_GROUP_RUNNER(gear)
     RUN_TEST_CASE(gear, out_of_tolerance_is_none);
     RUN_TEST_CASE(gear, hysteresis_keeps_previous_gear);
     RUN_TEST_CASE(gear, uncalibrated_gear_is_skipped);
+    RUN_TEST_CASE(gear, new_gear_needs_tolerance_not_hysteresis);
 }

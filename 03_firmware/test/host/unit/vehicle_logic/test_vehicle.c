@@ -27,7 +27,7 @@ TEST_SETUP(vehicle)
 
 TEST_TEAR_DOWN(vehicle) {}
 
-/* Verifica: SW-101 */
+/* Verifica: SW-101, SW-107 */
 TEST(vehicle, boost_uses_last_baro_and_tracks_peak)
 {
     vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 0, .fields = VEHICLE_HAS_BARO, .baro_kpa = 78.0f});
@@ -104,6 +104,27 @@ TEST(vehicle, last_z2h_result_survives_rearm)
     TEST_ASSERT_EQUAL_UINT32(result, v.out.z2h_ms);
 }
 
+/* Verifica: SW-106 */
+TEST(vehicle, default_baro_until_pid_0x33)
+{
+    vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 0, .fields = VEHICLE_HAS_MAP, .map_kpa = 201.3f});
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.00f, v.out.boost_bar);
+}
+
+/* Verifica: SW-305 */
+TEST(vehicle, no_gear_uses_lowest_shift_rpm)
+{
+    /* A 5 km/h no hay marcha: manda la RPM_Cambio de 1.ª (5500), la más baja. */
+    vehicle_on_sample(
+        &v, &(vehicle_sample_t){
+                .t_ms = 0, .fields = VEHICLE_HAS_RPM | VEHICLE_HAS_SPEED, .rpm = 5500.0f, .speed_kmh = 5.0f});
+    TEST_ASSERT_EQUAL_INT(VEHICLE_GEAR_NONE, v.out.gear);
+    TEST_ASSERT_TRUE(v.out.shift_alarm);
+
+    vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 1000, .fields = VEHICLE_HAS_RPM, .rpm = 5400.0f});
+    TEST_ASSERT_FALSE(v.out.shift_alarm);
+}
+
 TEST_GROUP_RUNNER(vehicle)
 {
     RUN_TEST_CASE(vehicle, boost_uses_last_baro_and_tracks_peak);
@@ -112,4 +133,6 @@ TEST_GROUP_RUNNER(vehicle)
     RUN_TEST_CASE(vehicle, baro_before_any_map_shows_no_boost);
     RUN_TEST_CASE(vehicle, gear_from_separate_rpm_and_speed_samples);
     RUN_TEST_CASE(vehicle, last_z2h_result_survives_rearm);
+    RUN_TEST_CASE(vehicle, default_baro_until_pid_0x33);
+    RUN_TEST_CASE(vehicle, no_gear_uses_lowest_shift_rpm);
 }
