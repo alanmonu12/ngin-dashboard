@@ -29,7 +29,8 @@ cumple. Mismo esquema que `software.md`.
 
 ## Formato
 
-Una tabla por área, con las mismas columnas que `software.md`:
+Una tabla por área, con las mismas columnas que `software.md`: la matriz de trazabilidad
+(`07_tools/01_scripts/trace.py`) la lee tal cual y CI falla si una fila está mal formada.
 
 | Columna | Contenido |
 | --- | --- |
@@ -43,7 +44,7 @@ Una tabla por área, con las mismas columnas que `software.md`:
 
 - **Implementado**: está en el esquemático y en el prototipo armado.
 - **Verificado**: la prueba o el análisis de su columna Verificación pasó y quedó registrado en un PR, citado como
-  `PR #nn` (en `06_testing/02_bench` van los datos de banco).
+  `PR #nn` (en `06_testing/02_bench` van los datos de banco). Sin esa cita, `trace.py` falla.
 - Una verificación por **análisis** compara la hoja de datos de la pieza elegida contra el requisito. Se usa cuando
   no hay equipo para la prueba (generador de transitorios, pistola ESD); el análisis queda en el PR.
 

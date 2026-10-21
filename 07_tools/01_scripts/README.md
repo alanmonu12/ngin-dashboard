@@ -7,7 +7,7 @@ con otro Python: `pip install -r 07_tools/01_scripts/requirements.txt`.
 | --- | --- |
 | `check_size.py` | Guardas de tamaño: falla si la IRAM pasa de 85 % o la app de 80 % de su partición (lo usa CI) |
 | `read_log.py` | Log del firmware en vivo o desde archivo: colores por nivel, filtro por tag/nivel, backtraces decodificados, guardado y resumen |
-| `trace.py` | Matriz de trazabilidad SYS → SW → test desde `software.md` y los `/* Verifica: SW-nnn */` de los tests (lo usa CI). Solo biblioteca estándar |
+| `trace.py` | Matriz de trazabilidad SYS → SW → test y SYS → HW desde `software.md`, `hardware.md` y los `/* Verifica: SW-nnn */` de los tests (lo usa CI). Solo biblioteca estándar |
 
 ## trace.py
 
@@ -18,8 +18,11 @@ python3 -m unittest discover -s 07_tools/01_scripts -p 'test_*.py'             #
 
 Sale con error si un test no cita ningún SW-xx, cita uno que no existe o está Eliminado, o no está en su
 `TEST_GROUP_RUNNER`; si un SW-xx Verificado no tiene test, o uno Implementado en `vehicle_logic` (que se
-prueba en host) tampoco; o si una fila de `software.md` está mal formada. Los SW-xx de `ui` o `settings` sin
-test se listan aparte: se verifican en la tarjeta. Corre en el job "Tests en host" y en el pre-commit.
+prueba en host) tampoco; si un HW-xx Verificado no cita el PR con su prueba o análisis (`PR #nn`); o si una fila
+de `software.md` o `hardware.md` está mal formada. Los SW-xx de `ui` o `settings` sin test se listan aparte: se
+verifican en la tarjeta. Los SYS-xx viven en el documento vivo, así que `trace.py` solo ve los que algún requisito
+cita: lista como aviso los huecos entre SYS-01 y el mayor citado. Corre en el job "Tests en host" y en el
+pre-commit.
 
 ## read_log.py
 
