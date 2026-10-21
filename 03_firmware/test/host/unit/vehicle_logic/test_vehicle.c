@@ -27,6 +27,7 @@ TEST_SETUP(vehicle)
 
 TEST_TEAR_DOWN(vehicle) {}
 
+/* Verifica: SW-101 */
 TEST(vehicle, boost_uses_last_baro_and_tracks_peak)
 {
     vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 0, .fields = VEHICLE_HAS_BARO, .baro_kpa = 78.0f});
@@ -61,6 +62,7 @@ TEST(vehicle, fields_seen_accumulates)
     TEST_ASSERT_EQUAL_UINT32(VEHICLE_HAS_RPM | VEHICLE_HAS_MAP, v.fields_seen);
 }
 
+/* Verifica: SW-105 */
 TEST(vehicle, baro_before_any_map_shows_no_boost)
 {
     /* Sin MAP todavía, el valor inicial de map_kpa no debe dar un boost ni un pico falsos. */
