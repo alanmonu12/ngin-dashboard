@@ -32,8 +32,8 @@ Viven en el repo para cambiar en el mismo PR que el código y el test que los ve
 
 ## Formato
 
-Una tabla por área, con estas columnas exactas: la matriz de trazabilidad (`07_tools/01_scripts/trace.py`, M1)
-la lee tal cual.
+Una tabla por área, con estas columnas exactas: la matriz de trazabilidad (`07_tools/01_scripts/trace.py`)
+la lee tal cual y CI falla si una fila está mal formada.
 
 | Columna | Contenido |
 | --- | --- |
@@ -49,7 +49,7 @@ Qué test lo verifica no va aquí: cada test cita sus SW-xx con un comentario `/
 (`CODING_STYLE.md` §8), y la matriz los junta. Así no hay dos listas que mantener.
 
 - **Implementado**: el código existe. Para pasar a **Verificado** necesita al menos un test que lo cite y pase en
-  CI, o una prueba en la tarjeta registrada en el PR.
+  CI, o una prueba en la tarjeta registrada en un PR, citado en su verificación como `PR #nn`.
 
 ## SW-1xx Medidor de boost
 

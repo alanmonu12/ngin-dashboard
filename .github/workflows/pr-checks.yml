@@ -78,6 +78,12 @@ jobs:
           cmake -S 03_firmware/test/host -B build-host -G Ninja -DUNITY_DIR="$PWD/unity" -DCOVERAGE=ON
           cmake --build build-host
           ctest --test-dir build-host --output-on-failure
+      # Matriz SYS → SW → test en el resumen; falla si un test no cita su SW-xx o un SW-xx verificado no tiene test.
+      - name: Trazabilidad
+        if: always()
+        run: |
+          python -m unittest discover -s 07_tools/01_scripts -p 'test_*.py'
+          python 07_tools/01_scripts/trace.py
       - name: Cobertura
         if: always()
         run: |

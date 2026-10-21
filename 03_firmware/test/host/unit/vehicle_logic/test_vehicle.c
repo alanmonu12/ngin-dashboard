@@ -56,6 +56,7 @@ TEST(vehicle, shift_rpm_follows_the_gear)
     TEST_ASSERT_FALSE(v.out.shift_alarm);
 }
 
+/* Verifica: SW-105, SW-201 */
 TEST(vehicle, fields_seen_accumulates)
 {
     vehicle_on_sample(&v, &(vehicle_sample_t){.t_ms = 0, .fields = VEHICLE_HAS_RPM, .rpm = 900.0f});
