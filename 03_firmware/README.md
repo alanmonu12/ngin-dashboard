@@ -25,6 +25,18 @@ idf.py -p /dev/ttyUSB0 flash monitor   # salir con Ctrl+]
 - Tarjeta: `idf.py -DBOARD=<subcarpeta de bsp/> build` (por defecto `wt32sc01`). Para una tarjeta nueva se agrega `bsp/<tarjeta>/bsp/` con la misma API.
 - Fuente de datos: `idf.py menuconfig` → Dashboard → Fuente de datos (por ahora solo el simulador).
 
+### Build de banco
+
+Para las pruebas en la tarjeta (`06_testing/02_bench/demo_tarjeta_m1.md`). Agrega la consola `bench` por el puerto
+serial y arranca con valores fijos de ralentí en lugar del simulador. Va en su propio directorio de build, así no
+se mezcla con el del auto:
+
+```bash
+idf.py -B build_bench -D SDKCONFIG=build_bench/sdkconfig -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.bench" build
+idf.py -B build_bench -p /dev/ttyUSB0 flash monitor
+bench>                                   # `help bench` lista los subcomandos
+```
+
 ## Tests en host
 
 ```bash
@@ -42,7 +54,7 @@ Un test nuevo: archivo en `unit/<componente>/` o `integration/` con `TEST_GROUP`
 
 `.github/workflows/pr-checks.yml` corre en cada PR y en cada push a `main`: formato (clang-format), tests de
 host con cobertura, build del firmware con guardas de tamaño (`07_tools/01_scripts/check_size.py`) y
-artefactos (`.bin`, `.elf`, `.map`). Ramas y PRs: `CODING_STYLE.md` §9.
+artefactos (`.bin`, `.elf`, `.map`), y el build de banco para que no deje de compilar. Ramas y PRs: `CODING_STYLE.md` §9.
 
 Los dos primeros checks también corren antes de cada commit con el hook de `.githooks/pre-commit`
 (no hace falta `get_idf`). Se activa una vez por clon:

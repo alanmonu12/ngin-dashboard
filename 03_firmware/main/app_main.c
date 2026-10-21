@@ -2,6 +2,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
+#include "bench.h"
 #include "bsp.h"
 #include "data_source.h"
 #include "settings.h"
@@ -28,6 +29,9 @@ static void snapshot(void *ctx, vehicle_outputs_t *out)
     xSemaphoreTake(vehicle_mutex, portMAX_DELAY);
     *out = vehicle.out;
     xSemaphoreGive(vehicle_mutex);
+#if CONFIG_APP_BENCH
+    bench_on_snapshot(out);
+#endif
 }
 
 /* Las razones de la fuente mandan si las conoce (simulador); si no, las calibradas en los ajustes. */
@@ -47,10 +51,14 @@ static vehicle_cfg_t vehicle_cfg_from(const app_settings_t *s, const data_source
 static data_source_t *create_source(void)
 {
 #if CONFIG_APP_SOURCE_SIMULATOR
-    return sim_source_create();
+    data_source_t *src = sim_source_create();
 #else
 #error "Fuente de datos no implementada todavía"
 #endif
+#if CONFIG_APP_BENCH
+    src = bench_source_create(src);
+#endif
+    return src;
 }
 
 void app_main(void)
@@ -72,6 +80,12 @@ void app_main(void)
         .unit = (vehicle_unit_t)settings_get()->unit,
     };
     ESP_ERROR_CHECK(ui_start(&ui_cfg));
+#if CONFIG_APP_BENCH
+    /* Antes de la fuente: la consola sirve también cuando la fuente falla (SW-904). */
+    if (bench_start() != ESP_OK) {
+        ESP_LOGE(TAG, "no se pudo iniciar la consola bench");
+    }
+#endif
 
     /* 5. Una falla de la fuente degrada: la pantalla sigue y avisa. */
     if (!src || data_source_start(src, on_sample, NULL) != ESP_OK) {
