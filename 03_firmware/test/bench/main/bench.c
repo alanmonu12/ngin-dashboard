@@ -1,7 +1,5 @@
 #include "bench.h"
 
-#if CONFIG_APP_BENCH
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -147,7 +145,7 @@ data_source_t *bench_source_create(data_source_t *inner)
     return &self->base;
 }
 
-void bench_on_snapshot(vehicle_outputs_t *out)
+static void bench_on_snapshot(vehicle_outputs_t *out)
 {
     taskENTER_CRITICAL(&bench.lock);
     if (bench.z2h_ms != Z2H_OFF) {
@@ -383,7 +381,7 @@ static int bench_cmd(int argc, char **argv)
     return 1;
 }
 
-esp_err_t bench_start(void)
+static esp_err_t bench_start(void)
 {
     ESP_RETURN_ON_FALSE(bsp_display_lock(LOCK_TIMEOUT_MS), ESP_ERR_TIMEOUT, TAG, "lock");
     lv_display_add_event_cb(lv_display_get_default(), refr_ready_cb, LV_EVENT_REFR_READY, NULL);
@@ -408,4 +406,8 @@ esp_err_t bench_start(void)
     return ESP_OK;
 }
 
-#endif
+const app_service_t bench_service = {
+    .name = "bench",
+    .start = bench_start,
+    .on_snapshot = bench_on_snapshot,
+};

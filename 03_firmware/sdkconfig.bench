@@ -1,4 +1,0 @@
-# Build de banco: consola "bench" por el puerto serial (06_testing/02_bench/demo_tarjeta_m1.md).
-# Se agrega a sdkconfig.defaults en un directorio de build aparte; nunca en el build del auto:
-#   idf.py -B build_bench -D SDKCONFIG=build_bench/sdkconfig -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.bench" build
-CONFIG_APP_BENCH=y
