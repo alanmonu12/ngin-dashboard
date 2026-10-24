@@ -113,7 +113,9 @@ jobs:
       - name: Caché de componentes del registro
         uses: actions/cache@v4
         with:
-          path: 03_firmware/managed_components
+          path: |
+            03_firmware/managed_components
+            03_firmware/test/bench/managed_components
           key: components-${{ hashFiles('03_firmware/dependencies.lock') }}
       - name: Build y guardas de tamaño
         uses: espressif/esp-idf-ci-action@v1
@@ -125,13 +127,12 @@ jobs:
           # COMPILERCHECK=content: IDF genera en build/ el archivo de -specs= en cada build y, con el
           # default (mtime), su fecha entra al hash y ningún objeto se reutiliza entre corridas.
           # El reporte va a un archivo: GITHUB_STEP_SUMMARY no existe dentro del contenedor.
-          # El build de banco (sdkconfig.bench) solo se compila para que no se rompa: no deja artefactos.
+          # La aplicación de banco (test/bench) solo se compila para que no se rompa: no deja artefactos.
           command: >-
             export CCACHE_DIR="$PWD/../.ccache" CCACHE_MAXSIZE=500M CCACHE_COMPILERCHECK=content &&
             ccache -z &&
             idf.py --ccache build &&
-            idf.py --ccache -B build_bench -D SDKCONFIG=build_bench/sdkconfig
-            -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.bench" build &&
+            idf.py --ccache -C test/bench build &&
             ccache -s &&
             python ../07_tools/01_scripts/check_size.py > build/size_report.md;
             status=$?; cat build/size_report.md; exit $status

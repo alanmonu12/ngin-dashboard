@@ -1,0 +1,11 @@
+menu "Build de banco"
+
+    # Sin prompt: siempre activa en esta aplicación y no existe en la del auto.
+    config APP_BENCH
+        bool
+        default y
+        help
+            Habilita en ui y settings lo que usa la consola bench para las pruebas
+            en la tarjeta (06_testing/02_bench/demo_tarjeta_m1.md).
+
+endmenu

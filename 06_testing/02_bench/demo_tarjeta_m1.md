@@ -27,7 +27,7 @@ SW-303 sale de este guion: sus 150 ms incluyen la latencia OBD y solo se pueden 
 
 1. Anotar el commit: `git rev-parse --short HEAD`.
 2. Construir y flashear el build de banco (comandos en "Build de banco").
-3. Guardar la salida de `idf.py -B build_bench monitor` de cada sesión en `06_testing/02_bench/logs/`; se cita en el
+3. Guardar la salida de `idf.py -C test/bench monitor` de cada sesión en `06_testing/02_bench/logs/`; se cita en el
    PR.
 
 Valores del simulador (`bench live`): arranca 4 s en ralentí, acelera de 1.ª a 6.ª cambiando a 6200 rpm, llega a
@@ -65,14 +65,14 @@ marcha.
 ## Build de banco
 
 Las pruebas de la parte B necesitan meter valores fijos, guardar ajustes y provocar fallas, cosas que el firmware
-de producción no permite. El build de banco (opción `APP_BENCH`, apagada por defecto, nunca en el build del auto)
+de producción no permite. El build de banco (otra aplicación, en `03_firmware/test/bench/`; nunca se flashea en el auto)
 agrega una consola `bench` por el puerto serial y **arranca con valores fijos de ralentí** (800 rpm, 0 km/h, MAP de
 32 kPa, barómetro de 78 kPa) en lugar del simulador, así el Boost_Pico parte de 0 en cada arranque.
 
 ```bash
 cd 03_firmware
-idf.py -B build_bench -D SDKCONFIG=build_bench/sdkconfig -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.bench" build
-idf.py -B build_bench -p /dev/ttyUSB0 flash monitor
+idf.py -C test/bench build
+idf.py -C test/bench -p /dev/ttyUSB0 flash monitor
 ```
 
 | Comando | Para qué |
@@ -111,7 +111,7 @@ Valores comunes: barómetro de 78 kPa, Ajustes_Por_Defecto (RPM_Cambio 6000 rpm,
 
 ### SW-702 Ajustes_Por_Defecto sin ajustes guardados
 
-1. `idf.py -B build_bench -p /dev/ttyUSB0 erase-flash flash monitor` y `bench settings`.
+1. `idf.py -C test/bench -p /dev/ttyUSB0 erase-flash flash monitor` y `bench settings`.
 2. **Pasa si** el log dice `sin ajustes guardados; valores por defecto` y `bench settings` muestra
    `unidad=bar bar_start=2500 shift=6000,6000,6000,6000,6000,6000`.
 
@@ -191,8 +191,8 @@ Con RPM_Inicio_Barra de 2500 y RPM_Cambio de 6000, los LED encendidos son la par
 
 ### SW-906 Backtrace antes de reiniciar por un panic
 
-1. En `idf.py -B build_bench monitor`, `bench panic`, guardando la salida. `monitor` decodifica el backtrace con
-   el `.elf` de `build_bench`; `read_log.py` usa el de `build` y aquí no sirve.
+1. En `idf.py -C test/bench monitor`, `bench panic`, guardando la salida. `monitor` decodifica el backtrace con
+   el `.elf` de `test/bench/build`; `read_log.py` usa el de `build` y aquí no sirve.
 2. **Pasa si** la salida tiene el backtrace decodificado con `abort` llamado desde `bench_cmd`, y la tarjeta
    reinicia sola hasta la pantalla de boost.
 
@@ -209,8 +209,8 @@ El PR cita el archivo y la línea, o la corrida de CI, como evidencia.
 | SW | Evidencia |
 | --- | --- |
 | SW-704 | `nvs_open_flash` en `components/settings/src/settings.c`: borra y reintenta con `ESP_ERR_NVS_NO_FREE_PAGES` y `ESP_ERR_NVS_NEW_VERSION_FOUND` |
-| SW-902 | `ESP_ERROR_CHECK(settings_init())` en `main/app_main.c` y `CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT=y` en `sdkconfig` |
-| SW-903 | `ESP_ERROR_CHECK(bsp_display_start())` en `main/app_main.c` con la misma opción |
+| SW-902 | `ESP_ERROR_CHECK(settings_init())` en `app_run()` (`components/app/src/app.c`) y `CONFIG_ESP_SYSTEM_PANIC_PRINT_REBOOT=y` en `sdkconfig` |
+| SW-903 | `ESP_ERROR_CHECK(bsp_display_start())` en `app_run()` (`components/app/src/app.c`) con la misma opción |
 | SW-907 | `buff_dma = true` en `bsp/wt32sc01/bsp/src/bsp.c` |
 | SW-908, SW-909 | Resumen de tamaño de "Build del firmware" en la corrida de CI del PR (`check_size.py`) |
 

@@ -4,13 +4,15 @@ Arquitectura y decisiones: ver la sección "Arquitectura de software" del docume
 
 | Carpeta | Contenido |
 | --- | --- |
-| `main/` | `app_main`: crea y conecta los componentes, en orden |
+| `main/` | `app_main` del auto: elige la fuente de datos y llama a `app_run()` |
+| `components/app/` | Arranque común a las dos aplicaciones (`app_run`), con la fuente y los servicios inyectados |
 | `bsp/<tarjeta>/bsp/` | Un componente `bsp` por tarjeta, todos con la misma API (`bsp.h`). Hoy: `wt32sc01` |
 | `components/vehicle_logic/` | Boost, marcha, shift light y 0–100. C puro, prefijo `vehicle_` |
 | `components/data_source/` | Interfaz `data_source_t` y simulador interno |
 | `components/settings/` | Ajustes en NVS |
 | `components/ui/` | Pantallas LVGL: boost, RPM/marcha y 0–100 |
 | `test/host/` | Tests en la PC: `unit/` e `integration/`, con su propio `main.c` |
+| `test/bench/` | Aplicación de banco: proyecto aparte con su `app_main`, que llama a `app_run()` con la consola `bench` como servicio |
 
 Cada componente tiene `include/` (API pública) y `src/` (implementación).
 
@@ -27,13 +29,13 @@ idf.py -p /dev/ttyUSB0 flash monitor   # salir con Ctrl+]
 
 ### Build de banco
 
-Para las pruebas en la tarjeta (`06_testing/02_bench/demo_tarjeta_m1.md`). Agrega la consola `bench` por el puerto
-serial y arranca con valores fijos de ralentí en lugar del simulador. Va en su propio directorio de build, así no
-se mezcla con el del auto:
+Para las pruebas en la tarjeta (`06_testing/02_bench/demo_tarjeta_m1.md`). Es otra aplicación, en `test/bench/`:
+el mismo arranque que el auto (`app_run()`) más la consola `bench` por el puerto serial, y arranca con valores
+fijos de ralentí en lugar del simulador. Usa los componentes de `components/` y `bsp/`, y tiene su propio `build/`:
 
 ```bash
-idf.py -B build_bench -D SDKCONFIG=build_bench/sdkconfig -D SDKCONFIG_DEFAULTS="sdkconfig.defaults;sdkconfig.bench" build
-idf.py -B build_bench -p /dev/ttyUSB0 flash monitor
+idf.py -C test/bench build
+idf.py -C test/bench -p /dev/ttyUSB0 flash monitor
 bench>                                   # `help bench` lista los subcomandos
 ```
 

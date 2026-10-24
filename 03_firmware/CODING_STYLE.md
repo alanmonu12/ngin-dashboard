@@ -24,7 +24,7 @@ Una excepción se justifica en un comentario junto al código.
 | Qué | Forma | Ejemplo |
 | --- | --- | --- |
 | Funciones y variables | `snake_case`, en inglés | `vehicle_on_sample`, `shift_rpm` |
-| API pública | Prefijo del componente, completo | `vehicle_`, `bsp_`, `ui_`, `settings_`, `data_source_` |
+| API pública | Prefijo del componente, completo | `vehicle_`, `bsp_`, `ui_`, `settings_`, `data_source_`, `app_` |
 | Tipos | `snake_case_t` con el mismo prefijo | `vehicle_cfg_t` |
 | Macros y constantes de enum | `MAYUSCULAS` con el prefijo | `VEHICLE_GEAR_COUNT`, `BSP_CAN_TX` |
 | Magnitudes físicas | Unidad al final del nombre | `latency_ms`, `speed_kmh`, `map_kpa`, `rate_rpm_s` |
